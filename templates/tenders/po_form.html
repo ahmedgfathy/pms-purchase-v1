@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% load rbac_tags %}
+
+{% block title %}{% if object %}{% t 'Edit' %} {% t 'PO' %} {{ object.po_no }}{% else %}{% t 'New Purchase Order' %}{% endif %}{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <h1>{% if object %}{% t 'Edit' %} {% t 'PO' %} {{ object.po_no }}{% else %}{% t 'New Purchase Order' %}{% endif %}</h1>
+  <a href="{% url 'po_list' %}" class="btn">{% t 'Back' %}</a>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="form-card">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+
+  <h2>{% t 'Order' %}</h2>
+  {% render_field form.rfq %}
+  {% render_field form.supplier %}
+  {% render_field form.legacy_op_no %}
+  {% render_field form.po_no %}
+  {% render_field form.po_date %}
+  {% render_field form.year %}
+  {% render_field form.items_description %}
+  {% render_field form.value %}
+  {% render_field form.currency %}
+  {% render_field form.payment_method %}
+  {% render_field form.cheque_no %}
+  {% render_field form.cheque_date %}
+  {% render_field form.followup_by %}
+  {% render_field form.sap_no %}
+
+  <h2>{% t 'L / C (Foreign Purchasing)' %}</h2>
+  {% render_field form.lc_open_date %}
+  {% render_field form.lc_receipt_date %}
+  {% render_field form.bank_name %}
+  {% render_field form.amount_egp %}
+  {% render_field form.amount_usd %}
+
+  <h2>{% t 'Delivery' %}</h2>
+  {% render_field form.delivery_days %}
+  {% render_field form.delivery_start_date %}
+  {% render_field form.expected_delivery_date %}
+  {% render_field form.actual_delivery_date %}
+  {% render_field form.delivery_place %}
+  {% render_field form.shipping_method %}
+  {% render_field form.goods_receipt_no %}
+  {% render_field form.shipping_docs_date %}
+  {% render_field form.customs_clearance_date %}
+  {% render_field form.disbursement_request_date %}
+  {% render_field form.bond_refund_date %}
+
+  <h2>{% t 'Other' %}</h2>
+  {% render_field form.notes %}
+  {% render_field form.po_image %}
+
+  <h2>{% t 'Delivery Compliance Checklist' %} (7 نقاط)</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px">
+    <label style="font-weight:normal">{{ form.items_delivered }} {% t 'Required items delivered' %} / تم توريد المهمات المطلوبة</label>
+    <label style="font-weight:normal">{{ form.qty_delivered }} {% t 'Full quantity delivered' %} / تم توريد الكمية المطلوبة</label>
+    <label style="font-weight:normal">{{ form.on_time }} {% t 'On time' %} / فى الموعد</label>
+    <label style="font-weight:normal">{{ form.right_place }} {% t 'Correct place' %} / المكان المحدد</label>
+    <label style="font-weight:normal">{{ form.per_specs }} {% t 'Per specifications' %} / مطابق للمواصفات</label>
+    <label style="font-weight:normal">{{ form.po_form_complete }} {% t 'PO form complete' %} / تعبئة الأمر سليمة</label>
+    <label style="font-weight:normal">{{ form.docs_complete }} Docs &amp; invoice complete / إكتمال المستندات</label>
+  </div>
+
+  <div class="form-actions"><button class="btn btn-primary">{% t 'Save PO' %}</button></div>
+</form>
+{% endblock %}

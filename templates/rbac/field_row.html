@@ -1,0 +1,12 @@
+<div class="field">
+  <label for="{{ field.id_for_label }}">
+    {{ field.label }}
+    {% if mode == 'hidden' %}
+      <span class="badge lock-badge">restricted</span>
+    {% elif mode == 'readonly' %}
+      <span class="badge lock-badge">view only</span>
+    {% endif %}
+  </label>
+  {{ field }}
+  {{ field.errors }}
+</div>

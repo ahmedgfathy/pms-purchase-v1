@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load rbac_tags %}
+
+{% block title %}{% t 'Delete' %} {% t 'RFQ' %}{% endblock %}
+
+{% block content %}
+  <div class="card form-card denied-card">
+    <h1>{% t 'Delete' %} {% t 'RFQ' %} {{ rfq.rfq_no }}?</h1>
+    <p>This will permanently delete <strong>{{ rfq.title }}</strong>. The deletion is recorded in the audit trail.</p>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn-danger btn-inline">{% t 'Yes, delete' %}</button>
+      <a href="{% url 'rfq_detail' rfq.pk %}" class="btn-link">{% t 'Cancel' %}</a>
+    </form>
+  </div>
+{% endblock %}

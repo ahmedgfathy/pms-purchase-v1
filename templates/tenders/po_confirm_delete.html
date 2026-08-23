@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% load rbac_tags %}
+
+{% block title %}{% t 'Delete' %} {% t 'PO' %} {{ po.po_no }}{% endblock %}
+
+{% block content %}
+<div class="page-head"><h1>{% t 'Delete' %} {% t 'Purchase Order' %}</h1></div>
+<div class="card">
+  <p>{% t 'Are you sure you want to delete' %} <strong>{{ po }}</strong>?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn btn-danger" type="submit">{% t 'Yes, delete' %}</button>
+    <a href="{% url 'po_detail' po.pk %}" class="btn">{% t 'Cancel' %}</a>
+  </form>
+</div>
+{% endblock %}

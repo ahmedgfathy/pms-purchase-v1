@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% load rbac_tags %}
+
+{% block title %}{% t 'Purchase Orders' %}{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <h1>{% t 'Purchase Orders' %}</h1>
+  {% user_can user 'tender' 'add' as can_add %}
+  {% if can_add or user.is_superuser %}<a href="{% url 'po_create' %}" class="btn btn-primary">{% t '+ New PO' %}</a>{% endif %}
+</div>
+
+<form method="get" class="filter-bar">
+  <input type="text" name="q" placeholder="{% t 'PO No. / SAP No. / vendor' %}" value="{{ filters.q|default:'' }}">
+  <select name="year">
+    <option value="">{% t 'All years' %}</option>
+    {% for y in years %}<option value="{{ y }}" {% if filters.year == y|stringformat:'s' %}selected{% endif %}>{{ y }}</option>{% endfor %}
+  </select>
+  <button class="btn" type="submit">{% t 'Search' %}</button>
+</form>
+
+<table class="data-table">
+  <thead><tr><th>{% t 'PO No.' %}</th><th>{% t 'Date' %}</th><th>{% t 'Vendor' %}</th><th>{% t 'RFQ' %}</th><th>{% t 'Value' %}</th><th>{% t 'Payment' %}</th><th>{% t 'Delivery' %}</th><th>{% t 'Checklist' %}</th><th>SAP {% t 'No.' %}</th></tr></thead>
+  <tbody>
+  {% for po in pos %}
+    <tr>
+      <td><a href="{% url 'po_detail' po.pk %}">{{ po.po_no }}</a></td>
+      <td>{{ po.po_date|date:'Y-m-d'|default:'—' }}</td>
+      <td dir="rtl">{% if po.supplier %}<a href="{% url 'vendor_detail' po.supplier.pk %}">{{ po.supplier.name_ar }}</a>{% else %}{{ po.items_description|truncatechars:30|default:'—' }}{% endif %}</td>
+      <td>{% if po.rfq %}<a href="{% url 'rfq_detail' po.rfq.pk %}">{{ po.rfq.rfq_no }}</a>{% else %}<span class="muted">{% t 'legacy' %} {{ po.legacy_op_no }}</span>{% endif %}</td>
+      <td>{{ po.value|default:'—' }} {{ po.currency }}</td>
+      <td>{{ po.get_payment_method_display|default:'—' }}</td>
+      <td>
+        {% if po.actual_delivery_date %}<span class="badge ok">{% t 'delivered' %} {{ po.actual_delivery_date|date:'Y-m-d' }}</span>
+        {% elif po.expected_delivery_date %}<span class="badge">{% t 'exp.' %} {{ po.expected_delivery_date|date:'Y-m-d' }}</span>
+        {% else %}—{% endif %}
+      </td>
+      <td><span class="badge {% if po.checklist_done == po.checklist_total %}ok{% elif po.checklist_done > 0 %}warn{% endif %}">{{ po.checklist_done }}/{{ po.checklist_total }}</span></td>
+      <td>{{ po.sap_no|default:'—' }}</td>
+    </tr>
+  {% empty %}<tr><td colspan="9" class="empty">{% t 'No purchase orders.' %}</td></tr>{% endfor %}
+  </tbody>
+</table>
+<p class="muted">{{ pos|length }} POs shown.</p>
+{% endblock %}

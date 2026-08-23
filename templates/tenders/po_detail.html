@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% load rbac_tags %}
+
+{% block title %}{% t 'PO' %} {{ po.po_no }}{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <h1>{% t 'Purchase Order' %} {{ po.po_no }}</h1>
+  <a href="{% url 'po_print' po.pk %}?lang=A" class="btn">طباعة</a>
+  <a href="{% url 'po_print' po.pk %}?lang=E" class="btn">{% t 'Print (EN)' %}</a>
+  {% user_can user 'tender' 'change' as can_change %}
+  {% if can_change or user.is_superuser %}<a href="{% url 'po_update' po.pk %}" class="btn btn-primary">{% t 'Edit' %}</a>{% endif %}
+  {% user_can user 'tender' 'delete' as can_delete %}
+  {% if can_delete or user.is_superuser %}
+    <form method="post" action="{% url 'po_delete' po.pk %}">
+      {% csrf_token %}<button class="btn-ghost danger">{% t 'Delete' %}</button>
+    </form>
+  {% endif %}
+  <a href="{% url 'po_list' %}" class="btn">{% t 'All POs' %}</a>
+</div>
+
+<div class="card-grid">
+  <div class="card accent blue">
+    <h2>{% t 'Order' %}</h2>
+    <dl>
+      <dt>{% t 'PO No.' %}</dt><dd>{{ po.po_no }} <span class="muted">({% t 'legacy' %} op {{ po.legacy_op_no|default:'—' }})</span></dd>
+      <dt>{% t 'Date' %}</dt><dd>{{ po.po_date|date:'Y-m-d'|default:'—' }}</dd>
+      <dt>{% t 'RFQ' %}</dt><dd>{% if po.rfq %}<a href="{% url 'rfq_detail' po.rfq.pk %}">{{ po.rfq.rfq_no }}</a>{% else %}—{% endif %}</dd>
+      <dt>{% t 'Vendor' %}</dt><dd dir="rtl">{% if po.supplier %}<a href="{% url 'vendor_detail' po.supplier.pk %}">{{ po.supplier.name_ar }}</a>{% else %}—{% endif %}</dd>
+      <dt>{% t 'Value' %}</dt><dd>{{ po.value|default:'—' }} {{ po.currency }}</dd>
+      <dt>{% t 'Payment' %}</dt><dd>{{ po.get_payment_method_display|default:'—' }}
+        {% if po.cheque_no %}(cheque {{ po.cheque_no }} @ {{ po.cheque_date|date:'Y-m-d' }}){% endif %}</dd>
+      <dt>SAP {% t 'No.' %}</dt><dd>{{ po.sap_no|default:'—' }}</dd>
+    </dl>
+  </div>
+
+  <div class="card accent orange">
+    <h2>L / C & Banking</h2>
+    <dl>
+      <dt>L/C opened</dt><dd>{{ po.lc_open_date|date:'Y-m-d'|default:'—' }}</dd>
+      <dt>L/C received</dt><dd>{{ po.lc_receipt_date|date:'Y-m-d'|default:'—' }}</dd>
+      <dt>{% t 'Bank' %}</dt><dd>{{ po.bank_name|default:'—' }}</dd>
+      <dt>{% t 'Amounts' %}</dt><dd>EGP {{ po.amount_egp|default:'—' }} · USD {{ po.amount_usd|default:'—' }}</dd>
+      <dt>{% t 'Bond refund' %}</dt><dd>{{ po.bond_refund_date|date:'Y-m-d'|default:'—' }}</dd>
+    </dl>
+  </div>
+
+  <div class="card accent green">
+    <h2>{% t 'Delivery Tracking' %}</h2>
+    <dl>
+      <dt>{% t 'Duration' %}</dt><dd>{{ po.delivery_days|default:'—' }} days {% t 'from' %} {{ po.delivery_start_date|date:'Y-m-d'|default:'—' }}</dd>
+      <dt>{% t 'Expected' %}</dt><dd>{{ po.expected_delivery_date|date:'Y-m-d'|default:'—' }}</dd>
+      <dt>{% t 'Actual' %}</dt><dd>{{ po.actual_delivery_date|date:'Y-m-d'|default:'—' }}</dd>
+      <dt>{% t 'Place / Shipping' %}</dt><dd>{{ po.delivery_place|default:'—' }} · {{ po.shipping_method|default:'—' }}</dd>
+      <dt>{% t 'Goods receipt' %}</dt><dd>{{ po.goods_receipt_no|default:'—' }}</dd>
+      <dt>{% t 'Docs / Customs' %}</dt><dd>{{ po.shipping_docs_date|date:'Y-m-d'|default:'—' }} / {{ po.customs_clearance_date|date:'Y-m-d'|default:'—' }}</dd>
+      <dt>{% t 'Disbursement req.' %}</dt><dd>{{ po.disbursement_request_date|date:'Y-m-d'|default:'—' }}</dd>
+      <dt>{% t 'Follow-up by' %}</dt><dd>{{ po.followup_by|default:'—' }}</dd>
+    </dl>
+  </div>
+</div>
+
+<h2 class="section-title">{% t 'Delivery Compliance Checklist' %} <span class="muted">({{ po.checklist_done }}/{{ po.checklist_total }})</span></h2>
+<table class="data-table">
+  <tbody>
+  {% for item in checklist_items %}
+    <tr>
+      <td>{{ item.0 }}</td>
+      <td style="width:60px;text-align:center">
+        {% if item.1 %}✔{% else %}<span class="muted">✗</span>{% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% if po.items_description %}<p><strong dir="rtl">بيان المهمات:</strong> <span dir="rtl">{{ po.items_description }}</span></p>{% endif %}
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% load rbac_tags %}
+
+{% block title %}{% if object %}{% t 'Edit' %}{% else %}{% t 'New' %}{% endif %} Purchase {% t 'Request' %}{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <div>
+      <div class="crumb">{% t 'Purchasing' %}</div>
+      <h1>{% if object %}{% t 'Edit' %}: {{ object.title }}{% else %}{% t 'New' %} Purchase {% t 'Request' %}{% endif %}</h1>
+    </div>
+  </div>
+
+  <form method="post" class="card form-card form-width">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for field in form.visible_fields %}
+      <div class="field">
+        <label for="{{ field.id_for_label }}">
+          {{ field.label }}
+          {% if form.field_modes|get_item:field.name == 'readonly' or form.field_modes|get_item:field.name == 'hidden' %}
+            <span class="badge lock-badge">{% if form.field_modes|get_item:field.name == 'hidden' %}hidden {% t 'from' %} you{% else %}view only{% endif %}</span>
+          {% endif %}
+        </label>
+        {{ field }}
+        {{ field.errors }}
+      </div>
+    {% endfor %}
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">{% t 'Save' %}</button>
+      <a href="{% url 'purchase_request_list' %}" class="btn-link">{% t 'Cancel' %}</a>
+    </div>
+  </form>
+{% endblock %}

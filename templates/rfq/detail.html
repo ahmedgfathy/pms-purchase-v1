@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% load rbac_tags %}
+
+{% block title %}{{ rfq.rfq_no }}{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <div>
+      <div class="crumb"><a href="{% url 'rfq_list' %}">{% t 'RFQ' %}</a> / {{ rfq.rfq_no }}</div>
+      <h1>{{ rfq.rfq_no }} — {{ rfq.title }}</h1>
+    </div>
+    <div class="header-actions">
+      {% user_can user 'rfq' 'change' as can_change %}
+      {% user_can user 'rfq' 'delete' as can_delete %}
+      {% if can_change %}<a href="{% url 'rfq_update' rfq.pk %}" class="btn-secondary btn-inline">{% t 'Edit' %}</a>{% endif %}
+      <a href="{% url 'rfq_vendor_list' rfq.pk %}" class="btn-secondary btn-inline">{% t 'Vendor' %} List ({{ rfq.invitations.count }})</a>
+      <a href="{% url 'evaluation_board' rfq.pk %}" class="btn-secondary btn-inline">{% t 'Tender Evaluation' %}</a>
+      {% if can_delete %}
+        <form method="post" action="{% url 'rfq_delete' rfq.pk %}">
+          {% csrf_token %}<button type="submit" class="btn-danger btn-inline">{% t 'Delete' %}</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card detail-card accent blue">
+    <table class="detail-table">
+      <tr><th>{% t 'Status' %}</th><td><span class="badge status-{{ rfq.status }}">{% t rfq.get_status_display %}</span></td></tr>
+      <tr><th>{% t 'Requesting Entity' %}</th><td>{{ rfq.requesting_entity }}{% if rfq.requester_contact %} · {{ rfq.requester_contact }}{% endif %}</td></tr>
+      <tr><th>{% t 'Request Received' %}</th><td>{{ rfq.request_date|date:"Y-m-d"|default:"—" }}</td></tr>
+      <tr><th>{% t 'Items / Title' %}</th><td>{{ rfq.title }}</td></tr>
+      <tr><th>{% t 'Technical Specs' %}</th><td>{{ rfq.technical_specs|linebreaksbr|default:"—" }}</td></tr>
+      <tr><th>{% t 'Administration' %}</th><td>{% t rfq.get_administration_display %}</td></tr>
+      <tr><th>{% t 'Execution Method' %}</th><td>{% t rfq.get_execution_method_display %}</td></tr>
+      {% field_access user 'rfq.RequestForQuotation' 'estimated_value' as val_mode %}
+      {% if val_mode == 'hidden' %}
+        <tr><th>{% t 'Estimated Value' %}</th><td class="muted">{% t 'Restricted for your role' %}</td></tr>
+      {% else %}
+        <tr><th>{% t 'Estimated Value' %}</th><td>{{ rfq.currency }} {{ rfq.estimated_value|default:"—" }}</td></tr>
+      {% endif %}
+      <tr><th>{% t 'Location' %}</th><td>{{ rfq.location.name|default:"—" }}</td></tr>
+      <tr><th>{% t 'Cost Center' %}</th><td>{{ rfq.cost_center.name|default:"—" }}</td></tr>
+      <tr><th>{% t 'Project' %}</th><td>{{ rfq.project.name|default:"—" }}{% if rfq.client.name %} ({{ rfq.client.name }}){% endif %}</td></tr>
+      <tr><th>{% t 'Buyer' %}</th><td>{{ rfq.buyer.get_username|default:"unassigned" }}</td></tr>
+      <tr><th>{% t 'SAP No.' %}</th><td>{{ rfq.sap_no|default:"—" }}</td></tr>
+      <tr><th>{% t 'Notes' %}</th><td>{{ rfq.notes|linebreaksbr|default:"—" }}</td></tr>
+      <tr><th>{% t 'Created' %}</th><td>{{ rfq.created_at|date:"Y-m-d H:i" }} by {{ rfq.created_by.username|default:"—" }}</td></tr>
+    </table>
+  </div>
+
+  {% user_can user 'rfq' 'change' as can_change2 %}
+  {% if can_change2 %}
+    <div class="card actions-card accent green">
+      <h2 class="section-title">{% t 'Workflow' %}</h2>
+      <div class="header-actions">
+        {% for s, label in transitions %}
+          {% if s != rfq.status %}
+            <form method="post" action="{% url 'rfq_status' rfq.pk s %}">
+              {% csrf_token %}<button class="btn-secondary btn-inline">{{ label }}</button>
+            </form>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

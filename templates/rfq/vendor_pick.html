@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load rbac_tags %}
+{% block title %}{% t 'Build Vendor List' %} · {{ rfq.rfq_no }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>{% t 'Build Vendor List' %} — {% t 'RFQ' %} {{ rfq.rfq_no }}</h1>
+  <a href="{% url 'rfq_vendor_list' rfq.pk %}" class="btn">{% t 'Current list' %} ({{ invited_count }})</a>
+  <a href="{% url 'rfq_detail' rfq.pk %}" class="btn">{% t 'Back to RFQ' %}</a>
+</div>
+
+<form method="get" class="filter-bar">
+  <select name="main" onchange="this.form.sub.value='';this.form.submit()">
+    <option value="">— {% t 'Main activity' %} —</option>
+    {% for m in mains %}<option value="{{ m.pk }}" {% if selected_main == m.pk|stringformat:'s' %}selected{% endif %}>{{ m.code }} · {{ m.name_ar }} / {{ m.name_en }}</option>{% endfor %}
+  </select>
+  <select name="sub" onchange="this.form.submit()">
+    <option value="">— {% t 'Sub activity' %} —</option>
+    {% for s in subs %}<option value="{{ s.pk }}" {% if selected_sub == s.pk|stringformat:'s' %}selected{% endif %}>{{ s.code }} · {{ s.name_ar }} / {{ s.name_en }}</option>{% endfor %}
+  </select>
+</form>
+
+{% if results %}
+<form method="post">
+  {% csrf_token %}
+  <table class="data-table">
+    <thead><tr><th></th><th>{% t 'No.' %}</th><th>{% t 'Name' %} AR</th><th>{% t 'Name' %} EN</th><th>{% t 'Status' %}</th><th>{% t 'Reg. type' %}</th><th>{% t 'Capacity' %}</th></tr></thead>
+    <tbody>
+    {% for q in results %}
+      <tr>
+        <td><input type="checkbox" name="suppliers" value="{{ q.supplier_id }}"></td>
+        <td><a href="{% url 'vendor_detail' q.supplier.pk %}">{{ q.supplier.supplier_no }}</a></td>
+        <td dir="rtl">{{ q.supplier.name_ar }}</td>
+        <td>{{ q.supplier.name_en }}</td>
+        <td>{{ q.supplier.get_registration_status_display|default:'—' }}
+          {% if q.supplier.suspended %}<span class="badge warn">susp.</span>{% endif %}
+        </td>
+        <td>{{ q.get_registration_type_display|default:'—' }}</td>
+        <td>{{ q.get_registration_capacity_display|default:'—' }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <div class="form-actions"><button class="btn btn-primary" type="submit">{% t 'Add selected to vendor list' %}</button></div>
+</form>
+<p class="muted">{{ results|length }} {% t 'qualified vendors not yet on the list.' %}</p>
+{% elif selected_sub or selected_main %}
+<p class="empty">{% t 'No additional qualified vendors found for this activity.' %}</p>
+{% endif %}
+{% endblock %}

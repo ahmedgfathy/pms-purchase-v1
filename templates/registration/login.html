@@ -1,0 +1,96 @@
+{% load static rbac_tags %}<!DOCTYPE html>
+<html lang="{{ APP_LANG }}" {% if APP_LANG == 'ar' %}dir="rtl"{% endif %}>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% t 'Sign In · Purchase Management System' %}</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+  <div class="lang-switch login-lang">
+    <a class="flag {% if APP_LANG == 'en' %}on{% endif %}" href="{% url 'set_lang' 'en' %}?next={{ request.path }}"><span class="flag-icon">🇬🇧</span> EN</a>
+    <a class="flag {% if APP_LANG == 'ar' %}on{% endif %}" href="{% url 'set_lang' 'ar' %}?next={{ request.path }}"><span class="flag-icon">🇪🇬</span> ع</a>
+  </div>
+
+  <main class="login-split">
+    <section class="login-brand">
+      <div class="brand-mark">
+        <img class="brand-logo-img" src="{% static 'img/pms-logo-white.svg' %}" alt="PMS Offshore">
+        <div class="brand-org">
+          {% t 'Petroleum Marine Services' %}
+          <span>{% t 'Purchase Management System' %}</span>
+        </div>
+      </div>
+
+      <h1 class="login-title">{% t 'Procurement for the maritime energy industry' %}</h1>
+      <p class="login-tagline">{% t 'Raise purchase requests, manage suppliers, and track purchase orders across your fleet — from one secure workspace.' %}</p>
+
+      <ul class="brand-points">
+        <li>
+          <span class="point-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg></span>
+          {% t 'End-to-end purchase request to order workflow' %}
+        </li>
+        <li>
+          <span class="point-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg></span>
+          {% t 'Multi-level approvals & budget control' %}
+        </li>
+        <li>
+          <span class="point-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg></span>
+          {% t 'Supplier management & spend analytics' %}
+        </li>
+        <li>
+          <span class="point-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg></span>
+          {% t 'Role-based access for office & vessel teams' %}
+        </li>
+      </ul>
+
+      <svg class="waves" viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true">
+        <path fill="rgba(255,255,255,0.08)" d="M0 120 C240 40 480 200 720 130 C960 60 1200 170 1440 100 L1440 220 L0 220 Z"/>
+        <path fill="rgba(255,255,255,0.12)" d="M0 160 C260 90 520 210 780 150 C1040 95 1240 190 1440 140 L1440 220 L0 220 Z"/>
+      </svg>
+
+      <div class="brand-copy">{% t '© 2026 Petroleum Marine Services' %}</div>
+    </section>
+
+    <section class="login-panel">
+      <form method="post" class="login-card" novalidate>
+        <h2>{% t 'Sign in' %}</h2>
+        <p class="sub">{% t 'Use your PMS account credentials' %}</p>
+
+        {% if form.errors %}
+          <ul class="form-errors">
+            {% for error in form.non_field_errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+            {% if form.errors|length and not form.non_field_errors %}
+              <li>{% t 'Invalid input. Please check the fields below.' %}</li>
+            {% endif %}
+          </ul>
+        {% endif %}
+
+        {% csrf_token %}
+
+        <div class="field">
+          <label for="{{ form.username.id_for_label }}">{% t 'Username or Email' %}</label>
+          {{ form.username }}
+          {{ form.username.errors }}
+        </div>
+
+        <div class="field">
+          <label for="{{ form.password.id_for_label }}">{% t 'Password' %}</label>
+          {{ form.password }}
+          {{ form.password.errors }}
+        </div>
+
+        <input type="hidden" name="next" value="{{ next }}">
+
+        <button type="submit" class="btn-primary">{% t 'Log On' %}</button>
+
+        <p class="login-hint">{% t 'Forgot password? Contact your system administrator.' %}</p>
+      </form>
+
+      <p class="login-foot">{% t 'Purchase Management System' %} v1.0 · {% t 'Petroleum Marine Services' %}</p>
+    </section>
+  </main>
+</body>
+</html>

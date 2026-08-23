@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load rbac_tags %}
+{% block title %}{% t 'Vendor' %} List · {{ rfq.rfq_no }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>{% t 'Vendor' %} List — {% t 'RFQ' %} {{ rfq.rfq_no }}</h1>
+  <a href="{% url 'rfq_vendor_pick' rfq.pk %}" class="btn btn-primary">+ {% t 'Add vendors' %}</a>
+  <a href="{% url 'rfq_vendorlist_print' rfq.pk %}?lang=E" class="btn">{% t 'Print (EN)' %}</a>
+  <a href="{% url 'rfq_vendorlist_print' rfq.pk %}?lang=A" class="btn">{% t 'طباعة (AR)' %}</a>
+  <a href="{% url 'rfq_detail' rfq.pk %}" class="btn">{% t 'Back to RFQ' %}</a>
+</div>
+
+<table class="data-table">
+  <thead><tr><th>#</th><th>{% t 'Supplier' %}</th><th>{% t 'Progress' %}</th><th>{% t 'Tech. result' %}</th><th>{% t 'Compl.' %}</th><th>{% t 'Certs' %}</th><th>{% t 'Initial bond' %}</th><th>{% t 'Final bond' %}</th><th>{% t 'Supply' %}</th><th>{% t 'PO' %}</th>{% if can_edit %}<th></th>{% endif %}</tr></thead>
+  <tbody>
+  {% for inv in invitations %}
+    {% with uid=forloop.counter0|stringformat:'s' %}
+    <tr>
+      <td>{{ inv.seq }}</td>
+      <td dir="rtl"><a href="{% url 'vendor_detail' inv.supplier.pk %}">{{ inv.supplier.name_ar }}<br><small>{{ inv.supplier.supplier_no }}</small></a></td>
+
+      {% if can_edit %}
+      <td><select name="progress_status" form="u{{ inv.pk }}" onchange="this.form.submit()">
+        {% for v, l in gen_statuses %}<option value="{{ v }}" {% if inv.progress_status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
+      </select></td>
+      <td><select name="technical_result" form="u{{ inv.pk }}" onchange="this.form.submit()">
+        {% for v, l in tech_results %}<option value="{{ v }}" {% if inv.technical_result == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
+      </select></td>
+      <td><input type="checkbox" name="technical_compliance" form="u{{ inv.pk }}" {% if inv.technical_compliance %}checked{% endif %} onchange="this.form.submit()"></td>
+      <td><select name="certificates_status" form="u{{ inv.pk }}" onchange="this.form.submit()">
+        {% for v, l in gen_statuses %}<option value="{{ v }}" {% if inv.certificates_status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
+      </select></td>
+      <td>
+        <select name="initial_bond_type" form="u{{ inv.pk }}" onchange="this.form.submit()">
+          {% for v, l in bond_types %}<option value="{{ v }}" {% if inv.initial_bond_type == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
+        </select>
+        <select name="initial_bond_status" form="u{{ inv.pk }}" onchange="this.form.submit()">
+          {% for v, l in gen_statuses %}<option value="{{ v }}" {% if inv.initial_bond_status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
+        </select>
+      </td>
+      <td><select name="final_bond_status" form="u{{ inv.pk }}" onchange="this.form.submit()">
+        {% for v, l in gen_statuses %}<option value="{{ v }}" {% if inv.final_bond_status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
+      </select></td>
+      <td><select name="supply_status" form="u{{ inv.pk }}" onchange="this.form.submit()">
+        {% for v, l in gen_statuses %}<option value="{{ v }}" {% if inv.supply_status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
+      </select></td>
+      <td><select name="po_status" form="u{{ inv.pk }}" onchange="this.form.submit()">
+        {% for v, l in gen_statuses %}<option value="{{ v }}" {% if inv.po_status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}
+      </select></td>
+      <td>
+        <form id="d{{ inv.pk }}" method="post" action="{% url 'invitation_delete' rfq.pk inv.pk %}">{% csrf_token %}</form>
+        <button class="btn-ghost danger" form="d{{ inv.pk }}">✕</button>
+      </td>
+      {% else %}
+      <td>{% t inv.get_progress_status_display %}</td>
+      <td>{% t inv.get_technical_result_display %}</td>
+      <td>{{ inv.technical_compliance|yesno:'✔,—' }}</td>
+      <td>{% t inv.get_certificates_status_display %}</td>
+      <td>{% t inv.get_initial_bond_type_display %} / {% t inv.get_initial_bond_status_display %}</td>
+      <td>{% t inv.get_final_bond_status_display %}</td>
+      <td>{% t inv.get_supply_status_display %}</td>
+      <td>{% t inv.get_po_status_display %}</td>
+      {% endif %}
+    </tr>
+    {% if can_edit %}
+    <form id="u{{ inv.pk }}" method="post" action="{% url 'invitation_update' rfq.pk inv.pk %}">{% csrf_token %}</form>
+    {% endif %}
+    {% endwith %}
+  {% empty %}<tr><td colspan="11" class="empty">{% t 'No vendors on this list yet — use “Add vendors”.' %}</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% endblock %}

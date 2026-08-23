@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load rbac_tags %}
+
+{% block title %}{% t 'Delete' %} Purchase {% t 'Request' %}{% endblock %}
+
+{% block content %}
+  <div class="card form-card denied-card">
+    <h1>{% t 'Delete' %} purchase request?</h1>
+    <p>{% t 'Are you sure you want to delete' %} <strong>{{ object.title }}</strong>? This action will be recorded in the audit trail.</p>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn-danger btn-inline">{% t 'Yes, delete' %}</button>
+      <a href="{% url 'purchase_request_list' %}" class="btn-link">{% t 'Cancel' %}</a>
+    </form>
+  </div>
+{% endblock %}

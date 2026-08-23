@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% load rbac_tags %}
+
+{% block title %}{% if object %}{% t 'Edit' %} {{ object.rfq_no }}{% else %}{% t 'New RFQ' %}{% endif %}{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <div>
+      <div class="crumb"><a href="{% url 'rfq_list' %}">{% t 'RFQ' %}</a></div>
+      <h1>{% if object %}{% t 'Edit' %} {{ object.rfq_no }}{% else %}{% t 'New RFQ' %} — Purchase {% t 'Request' %}{% endif %}</h1>
+    </div>
+  </div>
+
+  <form method="post" class="card form-card form-width">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <h2 class="section-title">{% t 'Request' %}</h2>
+    {% render_field form.title %}
+    {% render_field form.requesting_entity %}
+    {% render_field form.requester_contact %}
+    {% render_field form.request_date %}
+    {% render_field form.technical_specs %}
+
+    <h2 class="section-title">{% t 'Classification' %}</h2>
+    {% render_field form.administration %}
+    {% render_field form.execution_method %}
+    {% render_field form.location %}
+    {% render_field form.cost_center %}
+    {% render_field form.project %}
+    {% render_field form.client %}
+
+    <h2 class="section-title">{% t 'Value' %} &amp; Assignment</h2>
+    {% render_field form.estimated_value %}
+    {% render_field form.currency %}
+    {% render_field form.buyer %}
+    {% render_field form.sap_no %}
+    {% render_field form.notes %}
+
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">{% t 'Save' %}</button>
+      <a href="{% url 'rfq_list' %}" class="btn-link">{% t 'Cancel' %}</a>
+    </div>
+  </form>
+{% endblock %}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="{% if arabic %}ar{% else %}en{% endif %}">
+<head>
+  <meta charset="UTF-8">
+  <title>Vendor List — {{ rfq.rfq_no }}</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+  <style>
+    body { background: #fff; }
+    .print-sheet { max-width: 900px; margin: 24px auto; padding: 24px; }
+    .print-head { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0a6ed1; padding-bottom: 12px; margin-bottom: 16px; }
+    .print-head img { height: 42px; }
+    h1 { font-size: 18px; margin: 0; }
+    .meta { margin-bottom: 16px; font-size: 13px; color: #333; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 6px 8px; font-size: 12px; text-align: left; }
+    th { background: #eef5fd; }
+    .sign-row { display: flex; gap: 48px; justify-content: space-between; margin-top: 48px; text-align: center; font-size: 12px; }
+    @media print { .no-print { display: none; } }
+  </style>
+</head>
+<body>
+<div class="print-sheet">
+  <div class="print-head">
+    <img src="/static/img/pms-logo.svg" alt="PMS">
+    <h1>{% if arabic %}قائمة الموردين الداخلين للمناقصة{% else %}Tender Vendor List{% endif %}</h1>
+  </div>
+
+  <div class="meta" {% if arabic %}dir="rtl"{% endif %}>
+    <strong>{{ rfq.rfq_no }}</strong> —
+    {% if arabic %}
+      العميل: {{ rfq.client.name }} · المشروع: {{ rfq.project.name|default:'—' }} ·
+      التاريخ: <span class="today"></span> · عدد الموردين: {{ invitations.count }}
+    {% else %}
+      Client: {{ rfq.client.name }} · Project: {{ rfq.project.name|default:'—' }} ·
+      Date: <span class="today"></span> · Vendors: {{ invitations.count }}
+    {% endif %}
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>#</th><th>{% if arabic %}رقم المورد{% else %}Vendor No.{% endif %}</th>
+          <th dir="rtl">{% if arabic %}اسم المورد (عربى){% else %}Vendor Name (AR){% endif %}</th>
+          <th>{% if arabic %}الاسم بالإنجليزية{% else %}Vendor Name (EN){% endif %}</th></tr>
+    </thead>
+    <tbody>
+      {% for inv in invitations %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ inv.supplier.supplier_no }}</td>
+        <td dir="rtl">{{ inv.supplier.name_ar }}</td>
+        <td>{{ inv.supplier.name_en }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="sign-row">
+    <div>Purchase Manager<br><br>_____________</div>
+    <div>Dept. Head<br><br>_____________</div>
+    <div>General Manager<br><br>_____________</div>
+  </div>
+
+  <p class="no-print" style="text-align:center;margin-top:24px">
+    <button onclick="window.print()">Print / طباعة</button>
+    <a href="{% url 'rfq_vendor_list' rfq.pk %}" class="btn">Back</a>
+  </p>
+</div>
+<script>document.querySelectorAll('.today').forEach(e => e.textContent = new Date().toISOString().slice(0,10));</script>
+</body>
+</html>

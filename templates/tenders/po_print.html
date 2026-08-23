@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="{% if arabic %}ar{% else %}en{% endif %}">
+<head>
+  <meta charset="UTF-8">
+  <title>PO {{ po.po_no }}</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+  <style>
+    body { background: #fff; }
+    .print-sheet { max-width: 900px; margin: 24px auto; padding: 24px; }
+    .print-head { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0a6ed1; padding-bottom: 12px; margin-bottom: 16px; }
+    .print-head img { height: 42px; }
+    h1 { font-size: 18px; margin: 0; }
+    h2 { font-size: 14px; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
+    th, td { border: 1px solid #ccc; padding: 5px 8px; font-size: 12.5px; text-align: left; }
+    th { background: #eef5fd; width: 40%; }
+    @media print { .no-print { display: none; } }
+  </style>
+</head>
+<body>
+<div class="print-sheet">
+  <div class="print-head">
+    <img src="/static/img/pms-logo.svg" alt="PMS">
+    <h1>{% if arabic %}أمر توريد{% else %}Purchase Order{% endif %} — {{ po.po_no }}</h1>
+  </div>
+
+  <table {% if arabic %}dir="rtl"{% endif %}>
+    <tr><th>{% if arabic %}رقم أمر التوريد{% else %}PO No.{% endif %}</th><td>{{ po.po_no }} ({{ po.po_date|date:'Y-m-d'|default:'—' }})</td></tr>
+    <tr><th>{% if arabic %}المورد{% else %}Vendor{% endif %}</th>
+        <td dir="rtl">{% if po.supplier %}{% if arabic %}{{ po.supplier.name_ar }} · {{ po.supplier.name_en }}{% else %}{{ po.supplier.name_en }} · {{ po.supplier.name_ar }}{% endif %}
+          ({{ po.supplier.supplier_no }}){% else %}{{ po.items_description|default:'—' }}{% endif %}</td></tr>
+    <tr><th>{% if arabic %}بيان المهمات{% else %}Items{% endif %}</th><td dir="rtl">{{ po.items_description|default:'—' }}</td></tr>
+    <tr><th>{% if arabic %}القيمة{% else %}Value{% endif %}</th><td>{{ po.value|default:'—' }} {{ po.currency }} — {{ po.get_payment_method_display|default:'' }}</td></tr>
+    <tr><th>{% if arabic %}مدة ومكان التوريد{% else %}Delivery{% endif %}</th>
+        <td>{{ po.delivery_days|default:'—' }} days → {{ po.expected_delivery_date|date:'Y-m-d'|default:'—' }}
+            · {{ po.delivery_place|default:'' }}</td></tr>
+    <tr><th>SAP No.</th><td>{{ po.sap_no|default:'—' }}</td></tr>
+  </table>
+
+  <div class="sign-row" style="display:flex;gap:48px;justify-content:space-between;margin-top:48px;text-align:center;font-size:12px">
+    <div>{% if arabic %}مدير المشتريات{% else %}Purchase Manager{% endif %}<br><br>_____________</div>
+    <div>{% if arabic %}رئيس القسم{% else %}Section Head{% endif %}<br><br>_____________</div>
+    <div>{% if arabic %}الإدارة العامة{% else %}General Manager{% endif %}<br><br>_____________</div>
+  </div>
+
+  <p class="no-print" style="text-align:center;margin-top:24px">
+    <button onclick="window.print()">Print / طباعة</button>
+    <a href="{% url 'po_detail' po.pk %}" class="btn">Back</a>
+  </p>
+</div>
+</body>
+</html>

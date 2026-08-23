@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load rbac_tags %}
+
+{% block title %}{% t 'Permission Denied' %}{% endblock %}
+
+{% block content %}
+  <div class="card form-card denied-card">
+    <h1>{% t '403 — Access Denied' %}</h1>
+    <p>{% t 'You do not have permission to perform this action. The attempt has been logged in the audit trail.' %}</p>
+    <a href="/" class="btn-primary btn-inline">{% t 'Back to Home' %}</a>
+  </div>
+{% endblock %}

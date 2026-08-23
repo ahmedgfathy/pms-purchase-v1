@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load rbac_tags %}
+{% block title %}Activities — find qualified {% t 'vendors' %}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>{% t 'Vendor Qualification Search' %}</h1>
+  <span class="muted">v2026 “Tasks search” — {% t 'pick a main or sub activity to see registered vendors' %}</span>
+</div>
+
+<form method="get" class="filter-bar">
+  <select name="main">
+    <option value="">{% t 'All main activities' %} ({{ mains.count }})</option>
+    {% for m in mains %}<option value="{{ m.pk }}" {% if selected_main == m.pk|stringformat:'s' %}selected{% endif %}>{{ m.code }} · {{ m.name_ar }} / {{ m.name_en }}</option>{% endfor %}
+  </select>
+  <select name="sub">
+    <option value="">{% t 'All sub activities' %}</option>
+    {% for s in subs %}<option value="{{ s.pk }}" {% if selected_sub == s.pk|stringformat:'s' %}selected{% endif %}>{{ s.code }} · {{ s.name_ar }} / {{ s.name_en }}</option>{% endfor %}
+  </select>
+  <button class="btn btn-primary" type="submit">{% t 'Search' %}</button>
+</form>
+
+{% if results %}
+<table class="data-table">
+  <thead><tr><th>{% t 'Supplier No.' %}</th><th>{% t 'Name' %} AR</th><th>{% t 'Name' %} EN</th><th>{% t 'Sub activity' %}</th><th>{% t 'Reg. type' %}</th><th>{% t 'Capacity' %}</th></tr></thead>
+  <tbody>
+  {% for q in results %}
+    <tr>
+      <td><a href="{% url 'vendor_detail' q.supplier.pk %}">{{ q.supplier.supplier_no }}</a></td>
+      <td dir="rtl">{{ q.supplier.name_ar }}</td>
+      <td>{{ q.supplier.name_en }}</td>
+      <td>{{ q.task_sub.code }} {{ q.task_sub.name_en|default:q.task_sub.name_ar }}</td>
+      <td>{{ q.get_registration_type_display|default:'—' }}</td>
+      <td>{{ q.get_registration_capacity_display|default:'—' }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p class="muted">{{ results|length }} {% t 'qualification rows found' %}.</p>
+{% endif %}
+{% endblock %}

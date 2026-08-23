@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% load rbac_tags %}
+
+{% block title %}{{ request_obj.title }}{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <div>
+      <div class="crumb"><a href="{% url 'purchase_request_list' %}">{% t 'Purchase Requests' %}</a> / #{{ request_obj.pk }}</div>
+      <h1>{{ request_obj.title }}</h1>
+    </div>
+    <div class="header-actions">
+      {% user_can user 'purchases' 'change' as can_change %}
+      {% user_can user 'purchases' 'delete' as can_delete %}
+      {% if can_change %}<a href="{% url 'purchase_request_update' request_obj.pk %}" class="btn-secondary btn-inline">{% t 'Edit' %}</a>{% endif %}
+      {% if can_delete %}
+        <form method="post" action="{% url 'purchase_request_delete' request_obj.pk %}">
+          {% csrf_token %}<button type="submit" class="btn-danger btn-inline">{% t 'Delete' %}</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card detail-card accent blue">
+    <table class="detail-table">
+      <tr><th>{% t 'Status' %}</th><td><span class="badge status-{{ request_obj.status }}">{% t request_obj.get_status_display %}</span></td></tr>
+      <tr><th>{% t 'Description' %}</th><td>{{ request_obj.description|default:"—" }}</td></tr>
+      {% field_access user 'purchases.PurchaseRequest' 'quantity' as q_mode %}
+      {% if q_mode != 'hidden' %}<tr><th>{% t 'Quantity' %}</th><td>{{ request_obj.quantity }}</td></tr>{% endif %}
+      {% field_access user 'purchases.PurchaseRequest' 'unit_price' as p_mode %}
+      {% if p_mode == 'hidden' %}
+        <tr><th>{% t 'Pricing' %}</th><td class="muted">{% t 'Restricted for your role' %}</td></tr>
+      {% else %}
+        <tr><th>{% t 'Unit Price' %}</th><td>{{ request_obj.currency }} {{ request_obj.unit_price }} {% if p_mode == 'readonly' %}<span class="badge lock-badge">view only</span>{% endif %}</td></tr>
+        <tr><th>{% t 'Total' %}</th><td><strong>{{ request_obj.currency }} {{ request_obj.total }}</strong></td></tr>
+      {% endif %}
+      {% field_access user 'purchases.PurchaseRequest' 'budget_code' as b_mode %}
+      {% if b_mode != 'hidden' %}<tr><th>{% t 'Budget Code' %}</th><td>{{ request_obj.budget_code|default:"—" }}</td></tr>{% endif %}
+      <tr><th>{% t 'Needed By' %}</th><td>{{ request_obj.needed_by|date:"Y-m-d"|default:"—" }}</td></tr>
+      <tr><th>{% t 'Requested By' %}</th><td>{{ request_obj.requested_by.username }}</td></tr>
+      <tr><th>{% t 'Created' %}</th><td>{{ request_obj.created_at|date:"Y-m-d H:i" }}</td></tr>
+    </table>
+  </div>
+
+  {% user_can user 'purchases' 'change' as can_change2 %}
+  {% if can_change2 and request_obj.status != 'approved' %}
+    <div class="card actions-card accent green">
+      <h2 class="section-title">{% t 'Workflow' %}</h2>
+      <div class="header-actions">
+        {% if request_obj.status == 'draft' %}
+          <form method="post" action="{% url 'purchase_request_status' request_obj.pk 'submitted' %}">{% csrf_token %}<button class="btn-primary btn-inline">{% t 'Submit' %}</button></form>
+        {% endif %}
+        {% if request_obj.status == 'submitted' %}
+          <form method="post" action="{% url 'purchase_request_status' request_obj.pk 'approved' %}">{% csrf_token %}<button class="btn-primary btn-inline approve-btn">{% t 'Approve' %}</button></form>
+          <form method="post" action="{% url 'purchase_request_status' request_obj.pk 'rejected' %}">{% csrf_token %}<button class="btn-danger btn-inline">{% t 'Reject' %}</button></form>
+        {% endif %}
+        {% if request_obj.status == 'rejected' %}
+          <form method="post" action="{% url 'purchase_request_status' request_obj.pk 'draft' %}">{% csrf_token %}<button class="btn-primary btn-inline">{% t 'Back' %} to Draft</button></form>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

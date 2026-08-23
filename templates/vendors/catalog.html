@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load rbac_tags %}
+{% block title %}{% t 'Activities & Products Catalog' %}{% endblock %}
+{% block content %}
+
+<div class="page-head">
+  <h1>{% t 'Activities & Products Catalog' %}</h1>
+  <div class="header-actions">
+    <a href="{% url 'vendor_tasks' %}" class="btn btn-inline">{% t 'Browse by Activity' %}</a>
+    <a href="{% url 'vendor_list' %}" class="btn btn-inline">{% t 'All Suppliers' %}</a>
+  </div>
+</div>
+<p class="sub-line">{% t 'products and services registered per activity (legacy catalogue)' %} · {% t 'Total' %}: {{ total }}</p>
+
+<form method="get" class="filter-bar">
+  <select name="main" onchange="this.form.submit()">
+    <option value="">{% t 'All main activities' %}</option>
+    {% for m in mains %}
+      <option value="{{ m.main_code }}" {% if selected_main == m.main_code %}selected{% endif %}>
+        {{ m.main_code }} — {{ m.main_name }}</option>
+    {% endfor %}
+  </select>
+  <select name="activity" onchange="this.form.submit()">
+    <option value="">{% t 'All sub activities' %}</option>
+    {% for a in acts %}
+      <option value="{{ a.activity_code }}" {% if selected_activity == a.activity_code %}selected{% endif %}>
+        {{ a.activity_code }} — {{ a.activity_name }}</option>
+    {% endfor %}
+  </select>
+  <input type="text" name="q" value="{{ filters.q|default:'' }}" placeholder="{% t 'Search product, service or code…' %}">
+  <button class="btn btn-primary" type="submit">{% t 'Search' %}</button>
+</form>
+
+<table class="data-table">
+  <thead><tr>
+    <th>{% t 'Activity Code' %}</th><th>{% t 'Sub activity' %}</th><th>{% t 'Main activity' %}</th>
+    <th>{% t 'Product Code' %}</th><th>{% t 'Product / Service' %}</th><th>{% t 'Status' %}</th>
+  </tr></thead>
+  <tbody>
+  {% for p in page %}
+    <tr>
+      <td>{{ p.activity_code }}</td>
+      <td dir="rtl">{{ p.activity_name }}</td>
+      <td dir="rtl" class="muted">{{ p.main_name }}</td>
+      <td>{{ p.product_code|default:'—' }}</td>
+      <td dir="rtl">{{ p.product_service|default:'—' }}</td>
+      <td>{{ p.product_status|default:'—' }}</td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="6" class="empty">{% t 'No products match.' %}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<div class="pager">
+  {% if page.has_previous %}<a href="?{% if filters.q %}q={{ filters.q|urlencode }}&{% endif %}{% if selected_main %}main={{ selected_main }}&{% endif %}page={{ page.previous_page_number }}">« {% t 'Prev' %}</a>{% endif %}
+  <span>{% t 'Page' %} {{ page.number }} / {{ page.paginator.num_pages }}</span>
+  {% if page.has_next %}<a href="?{% if filters.q %}q={{ filters.q|urlencode }}&{% endif %}{% if selected_main %}main={{ selected_main }}&{% endif %}page={{ page.next_page_number }}">{% t 'Next' %} »</a>{% endif %}
+</div>
+{% endblock %}

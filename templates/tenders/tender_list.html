@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load rbac_tags %}
+{% block title %}{% t 'Tenders' %}{% endblock %}
+{% block content %}
+
+<div class="page-head">
+  <h1>{% t 'Tender Evaluation' %}</h1>
+  <div class="header-actions">
+    <a href="{% url 'po_list' %}" class="btn">{% t 'Purchase Orders' %}</a>
+  </div>
+</div>
+<p class="sub-line">{{ total }} {% t 'rfqs available for tender evaluation' %}</p>
+
+<form method="get" class="filter-bar">
+  <input type="text" name="q" placeholder="{% t 'RFQ No. / Title / Entity' %}" value="{{ filters.q|default:'' }}">
+  <select name="status">
+    <option value="">{% t 'All statuses' %}</option>
+    {% for val, label in statuses %}
+      <option value="{{ val }}" {% if filters.status == val %}selected{% endif %}>{% t label %}</option>
+    {% endfor %}
+  </select>
+  <select name="method">
+    <option value="">{% t 'All methods' %}</option>
+    {% for val, label in methods %}
+      <option value="{{ val }}" {% if filters.method == val %}selected{% endif %}>{% t label %}</option>
+    {% endfor %}
+  </select>
+  <button class="btn btn-primary" type="submit">{% t 'Search' %}</button>
+</form>
+
+<table class="data-table">
+  <thead><tr>
+    <th>{% t 'RFQ No.' %}</th>
+    <th>{% t 'Title' %}</th>
+    <th>{% t 'Requesting Entity' %}</th>
+    <th>{% t 'Status' %}</th>
+    <th>{% t 'Execution Method' %}</th>
+    <th>{% t 'Vendors' %}</th>
+    <th>{% t 'Awarded' %}</th>
+    <th></th>
+  </tr></thead>
+  <tbody>
+  {% for rfq in rfqs %}
+    <tr>
+      <td><a href="{% url 'rfq_detail' rfq.pk %}">{{ rfq.rfq_no }}</a></td>
+      <td>{{ rfq.title|truncatechars:50 }}</td>
+      <td dir="rtl">{{ rfq.requesting_entity }}</td>
+      <td><span class="badge status-{{ rfq.status }}">{% t rfq.get_status_display %}</span></td>
+      <td>{% t rfq.get_execution_method_display %}</td>
+      <td>{{ rfq.inv_count }}</td>
+      <td>
+        {% if rfq.awarded_count %}
+          <span class="badge ok">{% t 'Awarded' %}</span>
+        {% else %}
+          <span class="muted">—</span>
+        {% endif %}
+      </td>
+      <td><a href="{% url 'evaluation_board' rfq.pk %}" class="btn btn-inline">{% t 'Evaluate' %}</a></td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="8" class="empty">{% t 'No RFQs found.' %}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<div class="pager">
+  {% if rfqs.has_previous %}<a href="?page={{ rfqs.previous_page_number }}">{% t 'Prev' %}</a>{% endif %}
+  <span>{% t 'Page' %} {{ rfqs.number }} / {{ rfqs.paginator.num_pages }}</span>
+  {% if rfqs.has_next %}<a href="?page={{ rfqs.next_page_number }}">{% t 'Next' %}</a>{% endif %}
+</div>
+{% endblock %}

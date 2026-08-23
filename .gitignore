@@ -1,0 +1,14 @@
+venv/
+__pycache__/
+*.py[cod]
+db.sqlite3
+.env
+staticfiles/
+media/
+
+# Legacy Access databases (large binaries, not source)
+data/*.accdb
+
+# Compressed MySQL dump is intentionally tracked (force-added)
+!data/*.sql.gz
+

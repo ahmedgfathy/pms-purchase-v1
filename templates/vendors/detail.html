@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% load rbac_tags %}
+{% block title %}{% t 'Vendor View' %} · {{ vendor.supplier_no }}{% endblock %}
+{% block content %}
+
+<div class="access-form">
+  <div class="access-form-head">
+    <div>
+      <span class="rec-no">{% t 'Vendor No.' %} {{ vendor.supplier_no }}</span>
+      <h1 dir="rtl">{{ vendor.name_ar }}</h1>
+      {% if vendor.name_en %}<div class="rec-en">{{ vendor.name_en }}</div>{% endif %}
+    </div>
+    <div class="head-flags">
+      {% if vendor.certified %}<span class="badge ok">A-Certified</span>{% endif %}
+      {% if vendor.free_zone %}<span class="badge">{% t 'free zone' %}</span>{% endif %}
+      {% if vendor.suspended %}<span class="badge warn">{% t 'Suspended' %}</span>{% endif %}
+      {% if vendor.struck_off %}<span class="badge warn">{% t 'Struck off' %}</span>{% endif %}
+      <span class="badge status-draft">{% t vendor.get_registration_status_display %}</span>
+      <a href="{% url 'vendor_list' %}" class="btn btn-inline">{% t 'All Suppliers' %}</a>
+      {% if can_edit %}<a href="{% url 'vendor_update' vendor.pk %}" class="btn btn-primary btn-inline">{% t 'Edit' %}</a>{% endif %}
+    </div>
+  </div>
+
+  <fieldset class="access-section">
+    <legend>1 · {% t 'Registration' %} — {% t 'Dossier' %} / {% t 'Committee' %}</legend>
+    <div class="rec-grid">
+      <div class="rec-field"><label>{% t 'Registration' %}</label><div>{{ vendor.get_registration_status_display|default:'—' }}</div></div>
+      <div class="rec-field"><label>{% t 'Dossier' %}</label><div>{{ vendor.dossier_no|default:'—' }}{% if vendor.dossier_type %} · {{ vendor.dossier_type }}{% endif %}</div></div>
+      <div class="rec-field"><label>{% t 'Committee' %}</label><div>{{ vendor.committee_no|default:'—' }}</div></div>
+      <div class="rec-field"><label>{% t 'Date' %}</label><div>{{ vendor.committee_date|date:'Y-m-d'|default:'—' }}</div></div>
+      <div class="rec-field"><label>{% t 'Category' %}</label><div>{{ vendor.category|default:'—' }}</div></div>
+      <div class="rec-field"><label>{% t 'Country' %}</label><div>{{ vendor.country|default:'—' }}</div></div>
+      <div class="rec-field"><label>{% t 'Previous No.' %}</label><div>{{ vendor.previous_no|default:'—' }}</div></div>
+    </div>
+  </fieldset>
+
+  <fieldset class="access-section">
+    <legend>2 · {% t 'Documents' %} — {% t 'Capital' %}</legend>
+    <div class="rec-grid">
+      <div class="rec-field"><label>{% t 'Commercial registry' %}</label><div>{{ vendor.commercial_registry_no|default:'—' }}</div></div>
+      <div class="rec-field"><label>{% t 'exp.' %}</label><div>{{ vendor.commercial_registry_expiry|date:'Y-m-d'|default:'—' }}</div></div>
+      <div class="rec-field"><label>{% t 'Tax card' %}</label><div>{{ vendor.tax_card_no|default:'—' }}</div></div>
+      <div class="rec-field"><label>{% t 'exp.' %}</label><div>{{ vendor.tax_card_expiry|date:'Y-m-d'|default:'—' }}</div></div>
+      <div class="rec-field"><label>{% t 'VAT' %}</label><div>{{ vendor.vat_no|default:'—' }}</div></div>
+      <div class="rec-field"><label>{% t 'exp.' %}</label><div>{{ vendor.vat_expiry|date:'Y-m-d'|default:'—' }}</div></div>
+      <div class="rec-field"><label>{% t 'Capital' %}</label><div>{{ vendor.capital_amount|default:'—' }} {{ vendor.capital_currency }}</div></div>
+    </div>
+  </fieldset>
+
+  <fieldset class="access-section">
+    <legend>3 · {% t 'Contact' %}</legend>
+    <div class="rec-grid">
+      <div class="rec-field"><label>{% t 'Contacts' %}</label><div>{{ vendor.contact_person|default:'—' }}</div></div>
+      <div class="rec-field"><label>{% t 'Owner' %}</label><div>{{ vendor.owner_name|default:'—' }}</div></div>
+      <div class="rec-field"><label>{% t 'Phones' %}</label><div>{{ vendor.phone1|default:'—' }} / {{ vendor.phone2|default:'' }}</div></div>
+      <div class="rec-field"><label>{% t 'Mobiles' %}</label><div>{{ vendor.mobile1|default:'—' }} / {{ vendor.mobile2|default:'' }}</div></div>
+      <div class="rec-field"><label>Fax</label><div>{{ vendor.fax|default:'—' }}</div></div>
+      <div class="rec-field"><label>E-mail</label><div>{{ vendor.email1|default:'—' }}{% if vendor.email2 %} / {{ vendor.email2 }}{% endif %}</div></div>
+      <div class="rec-field"><label>Website</label><div>{{ vendor.website|default:'—' }}</div></div>
+      <div class="rec-field wide"><label>{% t 'Address' %}</label><div dir="rtl">{{ vendor.address|default:'—' }}</div></div>
+    </div>
+  </fieldset>
+
+  <fieldset class="access-section">
+    <legend>4 · {% t 'Agent' %}</legend>
+    <div class="rec-grid">
+      <div class="rec-field wide"><label>{% t 'Name' %}</label><div dir="rtl">{{ vendor.agent_name|default:'—' }}</div></div>
+      <div class="rec-field"><label>{% t 'Phones' %}</label><div>{{ vendor.agent_phone|default:'—' }}</div></div>
+      <div class="rec-field"><label>{% t 'Mobiles' %}</label><div>{{ vendor.agent_mobile|default:'—' }}</div></div>
+      <div class="rec-field"><label>Fax</label><div>{{ vendor.agent_fax|default:'—' }}</div></div>
+      <div class="rec-field"><label>E-mail</label><div>{{ vendor.agent_email|default:'—' }}</div></div>
+      <div class="rec-field wide"><label>{% t 'Address' %}</label><div dir="rtl">{{ vendor.agent_address|default:'—' }}</div></div>
+      <div class="rec-field wide"><label>{% t 'Documents' %}</label><div>{{ vendor.agency_documents|default:'—' }}</div></div>
+    </div>
+  </fieldset>
+
+  <fieldset class="access-section">
+    <legend>5 · {% t 'Qualified Activities' %} <span class="muted">({{ quals.count }})</span></legend>
+    <table class="data-table subform">
+      <thead><tr>
+        <th>{% t 'Main activity' %}</th><th>{% t 'Sub activity' %}</th><th>{% t 'Reg. type' %}</th>
+        <th>{% t 'Capacity' %}</th><th>{% t 'Brand' %}</th><th>{% t 'Maker' %}</th><th>{% t 'Origin' %}</th>
+        {% if can_edit %}<th></th>{% endif %}
+      </tr></thead>
+      <tbody>
+      {% for q in quals %}
+        <tr>
+          <td>{{ q.task_sub.main.code }} {{ q.task_sub.main.name_ar }}</td>
+          <td>{{ q.task_sub.code }} <span dir="rtl">{{ q.task_sub.name_ar }}</span> {{ q.task_sub.name_en }}</td>
+          <td>{% t q.get_registration_type_display %}</td>
+          <td>{% t q.get_registration_capacity_display %}</td>
+          <td>{{ q.brand|default:'—' }}</td>
+          <td>{{ q.original_maker|default:'—' }}</td>
+          <td>{{ q.origin_country|default:'—' }}</td>
+          {% if can_edit %}
+          <td>
+            <form method="post" action="{% url 'qualification_delete' vendor.pk q.pk %}">
+              {% csrf_token %}<button class="btn-ghost danger">{% t 'Remove' %}</button>
+            </form>
+          </td>
+          {% endif %}
+        </tr>
+      {% empty %}<tr><td colspan="8" class="empty">{% t 'No registered activities.' %}</td></tr>{% endfor %}
+      </tbody>
+    </table>
+    {% if can_edit %}
+    <form method="post" action="{% url 'qualification_add' vendor.pk %}" class="filter-bar">
+      {% csrf_token %}
+      {{ qual_form.task_sub }}
+      {{ qual_form.registration_type }}
+      {{ qual_form.registration_capacity }}
+      <input type="text" name="brand" placeholder="{% t 'Brand' %}">
+      <input type="text" name="original_maker" placeholder="{% t 'Maker' %}">
+      <input type="text" name="origin_country" placeholder="{% t 'Origin' %}">
+      <button class="btn btn-primary" type="submit">{% t '+ Add Activity' %}</button>
+    </form>
+    {% endif %}
+  </fieldset>
+
+  <fieldset class="access-section">
+    <legend>6 · {% t 'Products & Services Offered' %} <span class="muted">({{ activity_products|length }} {% t 'activities' %})</span></legend>
+    {% if activity_products %}
+    <table class="data-table subform">
+      <thead><tr>
+        <th>{% t 'Activity' %}</th><th>{% t 'Product / Service' %}</th>
+        <th>{% t 'Product Code' %}</th><th>{% t 'Status' %}</th>
+      </tr></thead>
+      <tbody>
+      {% for activity_name, products in activity_products.items %}
+        {% for p in products %}
+        <tr>
+          {% if forloop.first %}
+          <td rowspan="{{ products|length }}" dir="rtl" class="rec-field"><strong>{{ activity_name }}</strong></td>
+          {% endif %}
+          <td dir="rtl">{{ p.product_service }}</td>
+          <td>{{ p.product_code|default:'—' }}</td>
+          <td>{{ p.product_status|default:'—' }}</td>
+        </tr>
+        {% endfor %}
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p class="muted">{% t 'No registered products or services.' %}</p>
+    {% endif %}
+  </fieldset>
+
+  <fieldset class="access-section">
+    <legend>7 · {% t 'Tender Participation History' %}</legend>
+    <table class="data-table subform">
+      <thead><tr><th>#</th><th>{% t 'Title' %}</th><th>{% t 'Year' %}</th><th>{% t 'Offer' %}</th><th>{% t 'Technical result' %}</th><th>{% t 'Supply' %}</th><th>{% t 'PO' %}</th></tr></thead>
+      <tbody>
+      {% for inv in invitations %}
+        <tr>
+          <td><a href="{% url 'rfq_detail' inv.rfq.pk %}">{{ inv.rfq.rfq_no }}</a></td>
+          <td>{{ inv.rfq.title }}</td>
+          <td>{{ inv.rfq.year }}</td>
+          <td>{% t inv.get_offer_status_display %}</td>
+          <td>{% t inv.get_technical_result_display %}</td>
+          <td>{% t inv.get_supply_status_display %}</td>
+          <td>{% t inv.get_po_status_display %}</td>
+        </tr>
+      {% empty %}
+        {% for op in operations %}
+        <tr>
+          <td class="muted">{% t 'legacy' %} #{{ op.operation_no }}</td>
+          <td class="muted">—</td>
+          <td>{{ op.year }}</td>
+          <td dir="rtl">{{ op.offer_status|default:'—' }}</td>
+          <td dir="rtl">{{ op.technical_result|default:'—' }}</td>
+          <td dir="rtl">{{ op.supply_status|default:'—' }}</td>
+          <td dir="rtl">{{ op.po_status|default:'—' }}</td>
+        </tr>
+        {% endfor %}
+      {% endfor %}
+      {% if not invitations and not operations %}
+        <tr><td colspan="7" class="empty">{% t 'No tender participations yet.' %}</td></tr>
+      {% endif %}
+      </tbody>
+    </table>
+  </fieldset>
+</div>
+{% endblock %}

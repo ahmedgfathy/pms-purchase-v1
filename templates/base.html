@@ -1,0 +1,67 @@
+{% load static rbac_tags %}<!DOCTYPE html>
+<html lang="{{ APP_LANG }}" {% if APP_LANG == 'ar' %}dir="rtl"{% endif %}>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% t 'Purchase Management System' %}{% endblock %} · PMS</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+{% block body %}
+  <header class="shellbar">
+    <div class="shell-logo"><img src="{% static 'img/pms-logo-white.svg' %}" alt="PMS"></div>
+    <span class="shell-product">{% t 'Purchase Management System' %}</span>
+    <nav class="shell-nav">
+      <a href="/" class="active">{% t 'Home' %}</a>
+      {% user_can user 'purchases' 'view' as can_purchases %}
+      {% if can_purchases %}<a href="{% url 'purchase_request_list' %}">{% t 'Purchasing' %}</a>{% endif %}
+      {% user_can user 'rfq' 'view' as can_rfq %}
+      {% if can_rfq %}<a href="{% url 'rfq_list' %}">{% t 'RFQ' %}</a>{% endif %}
+      {% user_can user 'suppliers' 'view' as can_vendors %}
+      {% if can_vendors %}<a href="{% url 'vendor_list' %}">{% t 'Suppliers' %}</a>{% endif %}
+      {% user_can user 'tender' 'view' as can_tender %}
+      {% if can_tender %}<a href="{% url 'tender_detail' %}">{% t 'Tenders' %}</a>{% endif %}
+      {% is_access_admin user as admin_user %}
+      {% if admin_user %}
+        <a href="/admin/">{% t 'Administration' %}</a>
+        <a href="/admin/audit/auditlog/">{% t 'Audit Trail' %}</a>
+      {% endif %}
+    </nav>
+    <div class="shell-right">
+      <div class="lang-switch" title="Language / اللغة">
+        <a class="flag {% if APP_LANG == 'en' %}on{% endif %}" href="{% url 'set_lang' 'en' %}">
+          <span class="flag-icon">🇬🇧</span> EN
+        </a>
+        <a class="flag {% if APP_LANG == 'ar' %}on{% endif %}" href="{% url 'set_lang' 'ar' %}">
+          <span class="flag-icon">🇪🇬</span> ع
+        </a>
+      </div>
+      <span class="user-chip">
+        <span class="avatar">{{ user.get_username|first|upper }}</span>
+        {{ user.get_username }}
+        {% if user.employee %}
+          <span class="role-tag">{% t user.employee.job_title.name %}</span>
+        {% endif %}
+      </span>
+      <form method="post" action="{% url 'logout' %}" class="logout-form">
+        {% csrf_token %}
+        <button type="submit" class="btn-ghost">{% t 'Sign Out' %}</button>
+      </form>
+    </div>
+  </header>
+
+  <main class="page">
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="app-footer">© 2026 {% t 'Petroleum Marine Services' %} · PMS v1.0 · <a href="mailto:ahmed.fathy@pms.eg">Ahmed Fathy</a> {% t 'ext.' %} 1026</footer>
+{% endblock %}
+</body>
+</html>
