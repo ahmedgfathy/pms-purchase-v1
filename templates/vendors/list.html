@@ -5,14 +5,18 @@
 {% block title %}{% t 'Suppliers' %}{% endblock %}
 {% block content %}
 <div class="page-head">
-  <h1>{% t 'Suppliers' %}</h1>
-  <span class="muted">{{ total }} {% t 'vendors (legacy registry imported)' %}</span>
-  {% user_can user 'suppliers' 'add' as can_add %}
-  {% if can_add or user.is_superuser %}
-    <a href="{% url 'vendor_create' %}" class="btn btn-primary">{% t '+ New Vendor' %}</a>
-  {% endif %}
-  <a href="{% url 'vendor_tasks' %}" class="btn">{% t 'Browse by Activity' %}</a>
-  <a href="{% url 'vendor_catalog' %}" class="btn">{% t 'Activities & Products Catalog' %}</a>
+  <div>
+    <h1>{% t 'Suppliers' %}</h1>
+    <span class="header-meta">{{ total }} {% t 'vendors (legacy registry imported)' %}</span>
+  </div>
+  <div class="header-actions">
+    {% user_can user 'suppliers' 'add' as can_add %}
+    {% if can_add or user.is_superuser %}
+      <a href="{% url 'vendor_create' %}" class="btn btn-primary">{% t '+ New Vendor' %}</a>
+    {% endif %}
+    <a href="{% url 'vendor_tasks' %}" class="btn">{% t 'Browse by Activity' %}</a>
+    <a href="{% url 'vendor_catalog' %}" class="btn">{% t 'Activities & Products Catalog' %}</a>
+  </div>
 </div>
 
 <form method="get" class="filter-bar">

@@ -1,0 +1,131 @@
+/* ============ PMS Admin dark theme ============ */
+/* Self-contained — does not depend on app.css variables. */
+
+:root {
+  --a-bg: #0b1420;
+  --a-surface: #11202f;
+  --a-surface-2: #16283a;
+  --a-surface-3: #1d3147;
+  --a-line: #223247;
+  --a-text: #e6edf5;
+  --a-muted: #a4b4c6;
+  --a-blue: #2f86e8;
+  --a-blue-500: #58b0ff;
+  --a-green: #34c759;
+  --a-red: #ff6b61;
+}
+
+body {
+  background: var(--a-bg) !important;
+  color: var(--a-text) !important;
+}
+
+/* Top header bar */
+#header {
+  background: linear-gradient(180deg, #122031, #0b1420) !important;
+  color: var(--a-text) !important;
+  border-bottom: 1px solid var(--a-line) !important;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, .5);
+}
+#header a:link, #header a:visited { color: var(--a-blue-500) !important; }
+#branding h1 { color: var(--a-text) !important; }
+#branding h1 a:link, #branding h1 a:visited { color: var(--a-text) !important; }
+#user-tools a { border-bottom: none !important; }
+#user-tools strong { color: var(--a-text) !important; }
+
+/* Breadcrumbs */
+div.breadcrumbs {
+  background: var(--a-surface-2) !important;
+  color: var(--a-muted) !important;
+  border-bottom: 1px solid var(--a-line) !important;
+}
+div.breadcrumbs a { color: var(--a-blue-500) !important; }
+
+/* Content area */
+#content, #content-related {
+  background: transparent !important;
+  color: var(--a-text) !important;
+}
+.module {
+  background: var(--a-surface) !important;
+  border: 1px solid var(--a-line) !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+.module > h2, .module caption, .module .module h2 {
+  background: var(--a-surface-2) !important;
+  color: var(--a-text) !important;
+  border-bottom: 1px solid var(--a-line) !important;
+  border-radius: 0 !important;
+}
+.module ul, .module ol { border-radius: 0 !important; }
+
+/* Links */
+a:link, a:visited { color: var(--a-blue-500) !important; }
+a:hover { color: #8cc8ff !important; }
+.addlink { color: var(--a-green) !important; }
+.changelink { color: var(--a-blue-500) !important; }
+.deletelink { color: var(--a-red) !important; }
+
+/* Tables */
+table {
+  background: var(--a-surface) !important;
+  color: var(--a-text) !important;
+  border-radius: 0 !important;
+}
+thead th, tfoot td {
+  background: var(--a-surface-2) !important;
+  color: var(--a-muted) !important;
+  border-bottom: 2px solid var(--a-line) !important;
+}
+tbody tr td, tbody tr th { border-bottom: 1px solid var(--a-line) !important; }
+tr.row1 td, tr.row1 th { background: var(--a-surface) !important; }
+tr.row2 td, tr.row2 th { background: var(--a-surface-2) !important; }
+tbody tr:hover td, tbody tr:hover th { background: rgba(88, 176, 255, .08) !important; }
+
+/* Forms */
+input, select, textarea, .vTextField, .vLargeTextField, .vURLField, .vIntegerField {
+  background: var(--a-surface-2) !important;
+  color: var(--a-text) !important;
+  border: 1px solid var(--a-line) !important;
+  border-radius: 8px !important;
+}
+input[type="submit"], .button, button {
+  background: var(--a-blue) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 8px !important;
+}
+input[type="submit"]:hover, .button:hover, button:hover { filter: brightness(1.12); }
+.button.default, input[type="submit"].default { background: var(--a-blue) !important; }
+.deletelink, .deleteconfirmlink { background: #b32020 !important; border-radius: 8px !important; }
+
+/* Pagination + messages */
+.paginator {
+  background: var(--a-surface) !important;
+  color: var(--a-muted) !important;
+  border-top: 1px solid var(--a-line) !important;
+}
+.paginator a { background: var(--a-surface-2) !important; color: var(--a-blue-500) !important; }
+.errornote, .errorlist {
+  background: rgba(255, 107, 97, .12) !important;
+  color: var(--a-red) !important;
+  border: 1px solid rgba(255, 107, 97, .4) !important;
+  border-radius: 8px !important;
+}
+.messagelist li { background: var(--a-surface-2) !important; color: var(--a-text) !important; border-radius: 8px !important; }
+.success { border-left: 4px solid var(--a-green) !important; }
+.warning { border-left: 4px solid #ffcc00 !important; }
+
+/* Login form */
+.login #header { border-bottom: none !important; }
+.login .module { background: var(--a-surface) !important; }
+.login .form-row label { color: var(--a-muted) !important; }
+
+/* Misc containers */
+.app-pms, .app-auth { background: transparent !important; }
+.dashboard .module { margin-bottom: 18px !important; }
+#toolbar { background: var(--a-surface-2) !important; border-bottom: 1px solid var(--a-line) !important; }
+#changelist-filter { background: var(--a-surface) !important; border-left: 1px solid var(--a-line) !important; }
+#changelist-filter li a { color: var(--a-muted) !important; }
+#changelist-filter li.selected a { color: var(--a-blue-500) !important; }

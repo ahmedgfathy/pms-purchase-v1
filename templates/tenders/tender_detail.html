@@ -11,34 +11,32 @@
 </div>
 
 {# Filters #}
-<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-  <form method="get" style="display:flex;gap:6px;align-items:center;flex:1;flex-wrap:wrap">
-    {% if filters.pk %}<input type="hidden" name="pk" value="{{ filters.pk }}">{% endif %}
-    <select name="year" onchange="this.form.submit()" style="padding:7px 10px;background:var(--surface-2);border:1px solid var(--line-strong);border-radius:var(--radius-sm);color:var(--ink-1);font-size:14px">
-      <option value="">{% t 'All Years' %}</option>
-      {% for y in years %}<option value="{{ y }}" {% if filters.year == y|stringformat:"d" %}selected{% endif %}>{{ y }}</option>{% endfor %}
-    </select>
-    <select name="method" onchange="this.form.submit()" style="padding:7px 10px;background:var(--surface-2);border:1px solid var(--line-strong);border-radius:var(--radius-sm);color:var(--ink-1);font-size:14px">
-      <option value="">{% t 'All Types' %}</option>
-      {% for v, l in methods %}<option value="{{ v }}" {% if filters.method == v %}selected{% endif %}>{% t l %}</option>{% endfor %}
-    </select>
-    <select name="region" onchange="this.form.submit()" style="padding:7px 10px;background:var(--surface-2);border:1px solid var(--line-strong);border-radius:var(--radius-sm);color:var(--ink-1);font-size:14px">
-      <option value="">{% t 'All Regions' %}</option>
-      {% for v, l in regions %}<option value="{{ v }}" {% if filters.region == v %}selected{% endif %}>{% t l %}</option>{% endfor %}
-    </select>
-    <select name="status" onchange="this.form.submit()" style="padding:7px 10px;background:var(--surface-2);border:1px solid var(--line-strong);border-radius:var(--radius-sm);color:var(--ink-1);font-size:14px">
-      <option value="">{% t 'All Statuses' %}</option>
-      {% for v, l in statuses %}<option value="{{ v }}" {% if filters.status == v %}selected{% endif %}>{% t l %}</option>{% endfor %}
-    </select>
-  </form>
-</div>
+<form method="get" class="filter-bar card">
+  {% if filters.pk %}<input type="hidden" name="pk" value="{{ filters.pk }}">{% endif %}
+  <select name="year" onchange="this.form.submit()">
+    <option value="">{% t 'All Years' %}</option>
+    {% for y in years %}<option value="{{ y }}" {% if filters.year == y|stringformat:"d" %}selected{% endif %}>{{ y }}</option>{% endfor %}
+  </select>
+  <select name="method" onchange="this.form.submit()">
+    <option value="">{% t 'All Types' %}</option>
+    {% for v, l in methods %}<option value="{{ v }}" {% if filters.method == v %}selected{% endif %}>{% t l %}</option>{% endfor %}
+  </select>
+  <select name="region" onchange="this.form.submit()">
+    <option value="">{% t 'All Regions' %}</option>
+    {% for v, l in regions %}<option value="{{ v }}" {% if filters.region == v %}selected{% endif %}>{% t l %}</option>{% endfor %}
+  </select>
+  <select name="status" onchange="this.form.submit()">
+    <option value="">{% t 'All Statuses' %}</option>
+    {% for v, l in statuses %}<option value="{{ v }}" {% if filters.status == v %}selected{% endif %}>{% t l %}</option>{% endfor %}
+  </select>
+</form>
 
 {# Search + Nav Arrows #}
-<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-  <form method="get" id="navForm" style="display:flex;gap:6px;flex:1;max-width:320px">
+<div class="tender-toolbar">
+  <form method="get" class="tender-search" id="navForm">
     {% for k, v in filters.items %}{% if k != 'q' and k != 'pk' %}<input type="hidden" name="{{ k }}" value="{{ v }}">{% endif %}{% endfor %}
-    <input type="text" name="q" id="searchInput" placeholder="{% t 'Search tender no...' %}" value="" style="flex:1;padding:8px 12px;background:var(--surface-2);border:1px solid var(--line-strong);border-radius:var(--radius-sm);color:var(--ink-1);font-size:14px">
-    <button class="btn btn-primary" type="submit" style="padding:8px 16px">{% t 'Go' %}</button>
+    <input type="text" name="q" id="searchInput" placeholder="{% t 'Search tender no...' %}" value="">
+    <button class="btn btn-primary" type="submit">{% t 'Go' %}</button>
   </form>
 
   <div class="nav-bar">
@@ -51,14 +49,14 @@
 {% if rfq %}
 <div class="card accent blue" style="padding:20px 24px;margin-bottom:14px">
 
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px">
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-      <h2 style="margin:0;font-size:20px;font-weight:700">{{ rfq.rfq_no }}</h2>
+  <div class="tender-head">
+    <div class="tender-head-title">
+      <h2>{{ rfq.rfq_no }}</h2>
       <span class="badge status-{{ rfq.status }}">{% t rfq.get_status_display %}</span>
     </div>
-    <a href="{% url 'evaluation_board' rfq.pk %}" class="btn btn-primary" style="padding:7px 18px">{% t 'Evaluate' %}</a>
+    <a href="{% url 'evaluation_board' rfq.pk %}" class="btn btn-primary">{% t 'Evaluate' %}</a>
   </div>
-  <p style="margin:0 0 14px;color:var(--ink-2);font-size:14px">{{ rfq.title }}</p>
+  <p style="margin:0 0 14px;color:var(--ink-2);font-size:16px">{{ rfq.title }}</p>
 
   {# Fields Grid - compact #}
   <div class="tender-fields">
@@ -78,21 +76,21 @@
 
   {% if rfq.technical_specs %}
   <div style="margin-top:12px">
-    <label style="display:block;margin-bottom:4px;color:var(--ink-3);font-size:12px">{% t 'Technical Specs' %}</label>
-    <div style="background:var(--surface-2);padding:10px 14px;border-radius:var(--radius-sm);color:var(--ink-1);font-size:13px;white-space:pre-wrap;max-height:120px;overflow-y:auto">{{ rfq.technical_specs }}</div>
+    <span class="field-label">{% t 'Technical Specs' %}</span>
+    <div class="surface-box scroll">{{ rfq.technical_specs }}</div>
   </div>
   {% endif %}
 
   {% if rfq.notes %}
   <div style="margin-top:10px">
-    <label style="display:block;margin-bottom:4px;color:var(--ink-3);font-size:12px">{% t 'Notes' %}</label>
-    <div style="background:var(--surface-2);padding:10px 14px;border-radius:var(--radius-sm);color:var(--ink-1);font-size:13px;white-space:pre-wrap">{{ rfq.notes }}</div>
+    <span class="field-label">{% t 'Notes' %}</span>
+    <div class="surface-box">{{ rfq.notes }}</div>
   </div>
   {% endif %}
 
   {# Milestones #}
-  <div style="margin-top:14px;border-top:1px solid var(--line);padding-top:14px">
-    <h3 style="margin:0 0 10px;font-size:14px;color:var(--ink-2);font-weight:600">{% t 'Tender Milestones' %}</h3>
+  <div class="divider-top">
+    <h3 style="margin:0 0 10px;font-size:16px;color:var(--ink-2);font-weight:600">{% t 'Tender Milestones' %}</h3>
     {% if can_edit %}
     <form method="post" action="{% url 'save_milestones' rfq.pk %}">
       {% csrf_token %}
@@ -101,7 +99,7 @@
           <div class="tf"><label>{{ f.label }}</label>{{ f }}</div>
         {% endfor %}
       </div>
-      <div style="margin-top:10px"><button class="btn btn-primary" type="submit" style="padding:7px 16px">{% t 'Save' %}</button></div>
+      <div style="margin-top:10px"><button class="btn btn-primary" type="submit">{% t 'Save' %}</button></div>
     </form>
     {% else %}
     <div class="tender-fields">
@@ -119,7 +117,7 @@
 {# Vendor List #}
 <div class="card" style="padding:18px 24px">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-    <h2 style="margin:0;font-size:15px">{% t 'Vendor List' %} <span class="muted">({{ inv_count }})</span></h2>
+    <h2 style="margin:0;font-size:16px">{% t 'Vendor List' %} <span class="muted">({{ inv_count }})</span></h2>
     <a href="{% url 'evaluation_board' rfq.pk %}" class="btn btn-primary" style="padding:6px 14px">{% t 'Evaluate' %}</a>
   </div>
   {% if invitations %}
@@ -150,7 +148,7 @@
     </tbody>
   </table>
   {% if inv_count > 50 %}
-  <p class="muted" style="text-align:center;margin-top:10px;font-size:13px">{% t 'Showing first 50 vendors.' %} <a href="{% url 'evaluation_board' rfq.pk %}">{% t 'View all' %}</a></p>
+  <p class="muted" style="text-align:center;margin-top:10px;font-size:14px">{% t 'Showing first 50 vendors.' %} <a href="{% url 'evaluation_board' rfq.pk %}">{% t 'View all' %}</a></p>
   {% endif %}
   {% else %}
   <p class="empty">{% t 'No vendors on the list yet.' %}</p>
@@ -159,101 +157,7 @@
 
 {% else %}
 <div class="card" style="padding:60px;text-align:center">
-  <p style="font-size:18px;color:var(--ink-3)">{% t 'No tenders found.' %}</p>
+  <p style="font-size:19px;color:var(--ink-3)">{% t 'No tenders found.' %}</p>
 </div>
 {% endif %}
-
-<style>
-.tender-fields {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 8px 20px;
-}
-.tf {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.tf label {
-  color: var(--ink-3);
-  font-size: 11.5px;
-  margin: 0;
-  text-transform: uppercase;
-  letter-spacing: .3px;
-}
-.tf span {
-  color: var(--ink-1);
-  font-size: 14px;
-  min-height: 20px;
-}
-.tf input, .tf select, .tf textarea {
-  padding: 6px 10px;
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  color: var(--ink-1);
-  font-size: 13px;
-  min-height: 30px;
-}
-.tender-fields input[type="date"] {
-  min-width: 130px;
-}
-.nav-bar {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  background: var(--surface-2);
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-sm);
-  padding: 2px;
-}
-.nav-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 32px;
-  border-radius: 6px;
-  font-size: 15px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all .15s;
-}
-.nav-prev {
-  background: var(--surface-3);
-  color: var(--blue-600);
-  border: 1px solid var(--line);
-}
-.nav-prev:hover {
-  background: var(--blue-tint);
-  color: var(--blue-500);
-  border-color: var(--blue-700);
-  text-decoration: none;
-}
-.nav-next {
-  background: var(--surface-3);
-  color: var(--blue-600);
-  border: 1px solid var(--line);
-}
-.nav-next:hover {
-  background: var(--blue-tint);
-  color: var(--blue-500);
-  border-color: var(--blue-700);
-  text-decoration: none;
-}
-.nav-disabled {
-  opacity: .25;
-  cursor: default;
-  pointer-events: none;
-}
-.nav-pos {
-  color: var(--ink-3);
-  font-size: 12px;
-  font-weight: 500;
-  min-width: 64px;
-  text-align: center;
-  padding: 0 6px;
-}
-</style>
-
 {% endblock %}
