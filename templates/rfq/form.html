@@ -5,42 +5,58 @@
 {% block title %}{% if object %}{% t 'Edit' %} {{ object.rfq_no }}{% else %}{% t 'New RFQ' %}{% endif %}{% endblock %}
 
 {% block content %}
-  <div class="page-header">
+  <div class="page-head">
     <div>
-      <div class="crumb"><a href="{% url 'rfq_list' %}">{% t 'RFQ' %}</a></div>
       <h1>{% if object %}{% t 'Edit' %} {{ object.rfq_no }}{% else %}{% t 'New RFQ' %} — Purchase {% t 'Request' %}{% endif %}</h1>
     </div>
+    <a href="{% url 'rfq_list' %}" class="btn">{% t 'Back' %}</a>
   </div>
 
-  <form method="post" class="card form-card form-width">
+  <form method="post" class="form-card compact-form">
     {% csrf_token %}
     {{ form.non_field_errors }}
 
-    <h2 class="section-title">{% t 'Request' %}</h2>
-    {% render_field form.title %}
-    {% render_field form.requesting_entity %}
-    {% render_field form.requester_contact %}
-    {% render_field form.request_date %}
-    {% render_field form.technical_specs %}
+    <fieldset class="form-section">
+      <legend>{% t 'Request' %}</legend>
+      <div class="form-grid">
+        {% render_field form.title %}
+        {% render_field form.requesting_entity %}
+        {% render_field form.requester_contact %}
+        {% render_field form.request_date %}
+      </div>
+      <div class="form-grid form-grid-wide">
+        {% render_field form.technical_specs %}
+      </div>
+    </fieldset>
 
-    <h2 class="section-title">{% t 'Classification' %}</h2>
-    {% render_field form.administration %}
-    {% render_field form.execution_method %}
-    {% render_field form.location %}
-    {% render_field form.cost_center %}
-    {% render_field form.project %}
-    {% render_field form.client %}
+    <fieldset class="form-section">
+      <legend>{% t 'Classification' %}</legend>
+      <div class="form-grid">
+        {% render_field form.administration %}
+        {% render_field form.execution_method %}
+        {% render_field form.location %}
+        {% render_field form.cost_center %}
+        {% render_field form.project %}
+        {% render_field form.client %}
+      </div>
+    </fieldset>
 
-    <h2 class="section-title">{% t 'Value' %} &amp; Assignment</h2>
-    {% render_field form.estimated_value %}
-    {% render_field form.currency %}
-    {% render_field form.buyer %}
-    {% render_field form.sap_no %}
-    {% render_field form.notes %}
+    <fieldset class="form-section">
+      <legend>{% t 'Value & Assignment' %}</legend>
+      <div class="form-grid">
+        {% render_field form.estimated_value %}
+        {% render_field form.currency %}
+        {% render_field form.buyer %}
+        {% render_field form.sap_no %}
+      </div>
+      <div class="form-grid form-grid-wide">
+        {% render_field form.notes %}
+      </div>
+    </fieldset>
 
     <div class="form-actions">
-      <button type="submit" class="btn-primary">{% t 'Save' %}</button>
-      <a href="{% url 'rfq_list' %}" class="btn-link">{% t 'Cancel' %}</a>
+      <button type="submit" class="btn btn-primary">{% t 'Save' %}</button>
+      <a href="{% url 'rfq_list' %}" class="btn">{% t 'Cancel' %}</a>
     </div>
   </form>
 {% endblock %}

@@ -4,15 +4,14 @@
 {% block title %}{% t 'Dashboard' %}{% endblock %}
 
 {% block content %}
-<div class="page-header">
+<div class="page-head">
   <div>
-    <div class="crumb">{% t 'Home' %}</div>
     <h1>{% t 'Dashboard' %}</h1>
-    <p class="sub-line">{% t 'Welcome back' %}, {{ user.get_full_name|default:user.get_username }}</p>
+    <span class="header-meta">{% t 'Welcome back' %}, {{ user.get_full_name|default:user.get_username }}</span>
   </div>
 </div>
 
-{# ── KPI Row ── #}
+{# ── KPI Cards ── #}
 <section class="dash-kpis">
   <div class="dash-kpi dash-kpi-accent-blue">
     <div class="dash-kpi-icon">
@@ -20,7 +19,7 @@
     </div>
     <div class="dash-kpi-body">
       <span class="dash-kpi-val">{{ total }}</span>
-      <span class="dash-kpi-lbl">{% t 'Total Tenders' %}</span>
+      <span class="dash-kpi-lbl">{% t 'Total RFQs' %}</span>
     </div>
   </div>
   <div class="dash-kpi dash-kpi-accent-green">
@@ -122,85 +121,23 @@
 
 </section>
 
-{# ── Region Comparison (Cairo vs Alexandria) ── #}
-<section class="dash-section">
-  <h2 class="section-title">{% t 'Region Comparison' %}</h2>
-  <div class="dash-region-grid">
-
-    {# Cairo #}
-    <div class="card dash-region-card">
-      <div class="dash-region-head">
-        <span class="dash-region-dot bar-cairo"></span>
-        <h3>{% t 'Cairo' %}</h3>
-        <span class="dash-region-badge">{{ region_counts.cairo }}</span>
-      </div>
-      <div class="dash-region-stats">
-        <div class="dash-rstat">
-          <span class="dash-rstat-val">{{ region_status.cairo.new }}</span>
-          <span class="dash-rstat-lbl">{% t 'New' %}</span>
-        </div>
-        <div class="dash-rstat">
-          <span class="dash-rstat-val">{{ region_status.cairo.vendor_listing }}</span>
-          <span class="dash-rstat-lbl">{% t 'Vendor Listing' %}</span>
-        </div>
-        <div class="dash-rstat">
-          <span class="dash-rstat-val">{{ region_status.cairo.approved }}</span>
-          <span class="dash-rstat-lbl">{% t 'Approved' %}</span>
-        </div>
-      </div>
-      <div class="dash-region-value">
-        <span>{% t 'Est. Value' %}</span>
-        <strong>{% if region_values.cairo %}{{ region_values.cairo|floatformat:0 }} EGP{% else %}—{% endif %}</strong>
-      </div>
-    </div>
-
-    {# Alexandria #}
-    <div class="card dash-region-card">
-      <div class="dash-region-head">
-        <span class="dash-region-dot bar-alexandria"></span>
-        <h3>{% t 'Alexandria' %}</h3>
-        <span class="dash-region-badge">{{ region_counts.alexandria }}</span>
-      </div>
-      <div class="dash-region-stats">
-        <div class="dash-rstat">
-          <span class="dash-rstat-val">{{ region_status.alexandria.new }}</span>
-          <span class="dash-rstat-lbl">{% t 'New' %}</span>
-        </div>
-        <div class="dash-rstat">
-          <span class="dash-rstat-val">{{ region_status.alexandria.vendor_listing }}</span>
-          <span class="dash-rstat-lbl">{% t 'Vendor Listing' %}</span>
-        </div>
-        <div class="dash-rstat">
-          <span class="dash-rstat-val">{{ region_status.alexandria.approved }}</span>
-          <span class="dash-rstat-lbl">{% t 'Approved' %}</span>
-        </div>
-      </div>
-      <div class="dash-region-value">
-        <span>{% t 'Est. Value' %}</span>
-        <strong>{% if region_values.alexandria %}{{ region_values.alexandria|floatformat:0 }} EGP{% else %}—{% endif %}</strong>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-{# ── Quick Links ── #}
+{# ── Quick Access ── #}
 <section class="dash-section">
   <h2 class="section-title">{% t 'Quick Access' %}</h2>
   <div class="tile-grid">
     {% for tile in tiles %}
       <a href="{{ tile.url }}" class="card tile c-{% if tile.code == 'purchases' %}blue{% elif tile.code == 'suppliers' %}orange{% elif tile.code == 'rfq' %}cyan{% elif tile.code == 'tender' %}purple{% elif tile.code == 'administration' %}yellow{% else %}green{% endif %}">
         <span class="tile-icon">
-          {% if tile.code == 'purchases' %}
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          {% elif tile.code == 'suppliers' %}
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-          {% elif tile.code == 'rfq' %}
+          {% if tile.code == 'rfq' %}
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>
           {% elif tile.code == 'tender' %}
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          {% elif tile.code == 'suppliers' %}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          {% elif tile.code == 'purchases' %}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
           {% else %}
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4m0 14v4M4.2 4.2l2.8 2.8m10 10 2.8 2.8M1 12h4m14 0h4M4.2 19.8 7 17m10-10 2.8-2.8"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-2.82 1.17V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
           {% endif %}
         </span>
         <span class="tile-name">{% t tile.name %}</span>

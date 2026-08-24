@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% t 'Sign In · Purchase Management System' %}</title>
-  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <title>{% t 'Sign In · PMS' %}</title>
+  <link rel="stylesheet" href="{% static 'fonts/fonts.css' %}?v=7">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}?v=7">
 </head>
 <body>
   <div class="lang-switch login-lang">
@@ -15,47 +16,35 @@
   <main class="login-split">
     <section class="login-brand">
       <div class="brand-mark">
-        <img class="brand-logo-img" src="{% static 'img/pms-logo-white.svg' %}" alt="PMS Offshore">
-        <div class="brand-org">
-          {% t 'Petroleum Marine Services' %}
-          <span>{% t 'Purchase Management System' %}</span>
-        </div>
+        <img class="brand-logo-img" src="{% static 'img/pms-logo-white.svg' %}" alt="PMS">
+        <div class="brand-org">PMS</div>
       </div>
 
-      <h1 class="login-title">{% t 'Procurement for the maritime energy industry' %}</h1>
-      <p class="login-tagline">{% t 'Raise purchase requests, manage suppliers, and track purchase orders across your fleet — from one secure workspace.' %}</p>
+      <h1 class="login-title">{% t 'Purchase Management System' %}</h1>
+      <p class="login-tagline">{% t 'Manage procurement workflows, suppliers, and purchase orders — all in one place.' %}</p>
 
       <ul class="brand-points">
         <li>
-          <span class="point-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg></span>
-          {% t 'End-to-end purchase request to order workflow' %}
+          <span class="point-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></span>
+          {% t 'Request to order workflow' %}
         </li>
         <li>
-          <span class="point-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg></span>
-          {% t 'Multi-level approvals & budget control' %}
+          <span class="point-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></span>
+          {% t 'Multi-level approvals' %}
         </li>
         <li>
-          <span class="point-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg></span>
-          {% t 'Supplier management & spend analytics' %}
-        </li>
-        <li>
-          <span class="point-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg></span>
-          {% t 'Role-based access for office & vessel teams' %}
+          <span class="point-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></span>
+          {% t 'Supplier & spend analytics' %}
         </li>
       </ul>
 
-      <svg class="waves" viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true">
-        <path fill="rgba(255,255,255,0.08)" d="M0 120 C240 40 480 200 720 130 C960 60 1200 170 1440 100 L1440 220 L0 220 Z"/>
-        <path fill="rgba(255,255,255,0.12)" d="M0 160 C260 90 520 210 780 150 C1040 95 1240 190 1440 140 L1440 220 L0 220 Z"/>
-      </svg>
-
-      <div class="brand-copy">{% t '© 2026 Petroleum Marine Services' %}</div>
+      <div class="brand-copy">© 2026 PMS</div>
     </section>
 
     <section class="login-panel">
       <form method="post" class="login-card" novalidate>
         <h2>{% t 'Sign in' %}</h2>
-        <p class="sub">{% t 'Use your PMS account credentials' %}</p>
+        <p class="sub">{% t 'Enter your credentials to continue' %}</p>
 
         {% if form.errors %}
           <ul class="form-errors">
@@ -63,7 +52,7 @@
               <li>{{ error }}</li>
             {% endfor %}
             {% if form.errors|length and not form.non_field_errors %}
-              <li>{% t 'Invalid input. Please check the fields below.' %}</li>
+              <li>{% t 'Invalid username or password.' %}</li>
             {% endif %}
           </ul>
         {% endif %}
@@ -71,7 +60,7 @@
         {% csrf_token %}
 
         <div class="field">
-          <label for="{{ form.username.id_for_label }}">{% t 'Username or Email' %}</label>
+          <label for="{{ form.username.id_for_label }}">{% t 'Username' %}</label>
           {{ form.username }}
           {{ form.username.errors }}
         </div>
@@ -84,12 +73,12 @@
 
         <input type="hidden" name="next" value="{{ next }}">
 
-        <button type="submit" class="btn-primary">{% t 'Log On' %}</button>
+        <button type="submit" class="btn-primary">{% t 'Sign In' %}</button>
 
-        <p class="login-hint">{% t 'Forgot password? Contact your system administrator.' %}</p>
+        <p class="login-hint">{% t 'Contact your administrator for access.' %}</p>
       </form>
 
-      <p class="login-foot">{% t 'Purchase Management System' %} v1.0 · {% t 'Petroleum Marine Services' %}</p>
+      <p class="login-foot">PMS v1.0</p>
     </section>
   </main>
 </body>

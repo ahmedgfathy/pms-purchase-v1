@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -44,8 +45,10 @@ def apply_filters(qs, params):
 def rfq_list(request):
     qs = apply_filters(RequestForQuotation.objects.select_related('project', 'client', 'location'), request.GET)
     years = sorted(set(RequestForQuotation.objects.values_list('year', flat=True)), reverse=True)
+    paginator = Paginator(qs, 20)
+    page = paginator.get_page(request.GET.get('page'))
     return render(request, 'rfq/list.html', {
-        'rfqs': qs[:200],
+        'rfqs': page,
         'statuses': RequestForQuotation.STATUS_CHOICES,
         'admins': RequestForQuotation.ADMIN_CHOICES,
         'years': years,

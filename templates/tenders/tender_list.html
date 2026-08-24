@@ -26,6 +26,11 @@
     {% endfor %}
   </select>
   <button class="btn btn-primary" type="submit">{% t 'Search' %}</button>
+  <span class="pager-inline">
+    {% if rfqs.has_previous %}<a href="?page={{ rfqs.previous_page_number }}&q={{ filters.q|default:'' }}&status={{ filters.status|default:'' }}&method={{ filters.method|default:'' }}">{% t 'Prev' %}</a>{% endif %}
+    <span>{% t 'Page' %} {{ rfqs.number }} / {{ rfqs.paginator.num_pages }}</span>
+    {% if rfqs.has_next %}<a href="?page={{ rfqs.next_page_number }}&q={{ filters.q|default:'' }}&status={{ filters.status|default:'' }}&method={{ filters.method|default:'' }}">{% t 'Next' %}</a>{% endif %}
+  </span>
 </form>
 
 <table class="data-table">
@@ -63,9 +68,4 @@
   </tbody>
 </table>
 
-<div class="pager">
-  {% if rfqs.has_previous %}<a href="?page={{ rfqs.previous_page_number }}">{% t 'Prev' %}</a>{% endif %}
-  <span>{% t 'Page' %} {{ rfqs.number }} / {{ rfqs.paginator.num_pages }}</span>
-  {% if rfqs.has_next %}<a href="?page={{ rfqs.next_page_number }}">{% t 'Next' %}</a>{% endif %}
-</div>
 {% endblock %}

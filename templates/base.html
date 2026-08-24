@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}{% t 'Purchase Management System' %}{% endblock %} · PMS</title>
   <link rel="stylesheet" href="{% static 'fonts/fonts.css' %}">
-  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}?v=7">
 </head>
 <body>
 {% block body %}
@@ -14,34 +14,29 @@
       <span class="shell-logo"><img src="{% static 'img/pms-logo-white.svg' %}" alt="PMS"></span>
       <span class="shell-brand-text">
         <span class="shell-product">PMS</span>
-        <span class="shell-sub">{% t 'Petroleum Marine Services' %}</span>
+        <span class="shell-sub">{% t 'Procurement Department' %}</span>
       </span>
     </a>
 
     <nav class="shell-nav">
-      <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}" title="{% t 'Home' %}">
+      <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}" title="{% t 'Dashboard' %}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg>
-        <span>{% t 'Home' %}</span>
+        <span>{% t 'Dashboard' %}</span>
       </a>
-      {% user_can user 'purchases' 'view' as can_purchases %}
-      {% if can_purchases %}<a href="{% url 'purchase_request_list' %}" class="nav-link {% if '/purchases/' in request.path %}active{% endif %}" title="{% t 'Purchasing' %}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-        <span>{% t 'Purchasing' %}</span>
-      </a>{% endif %}
       {% user_can user 'rfq' 'view' as can_rfq %}
       {% if can_rfq %}<a href="{% url 'rfq_list' %}" class="nav-link {% if '/rfq/' in request.path %}active{% endif %}" title="{% t 'RFQ' %}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
         <span>{% t 'RFQ' %}</span>
       </a>{% endif %}
-      {% user_can user 'suppliers' 'view' as can_vendors %}
-      {% if can_vendors %}<a href="{% url 'vendor_list' %}" class="nav-link {% if '/vendors/' in request.path %}active{% endif %}" title="{% t 'Suppliers' %}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
-        <span>{% t 'Suppliers' %}</span>
-      </a>{% endif %}
       {% user_can user 'tender' 'view' as can_tender %}
       {% if can_tender %}<a href="{% url 'tender_detail' %}" class="nav-link {% if '/tenders/' in request.path %}active{% endif %}" title="{% t 'Tenders' %}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
         <span>{% t 'Tenders' %}</span>
+      </a>{% endif %}
+      {% user_can user 'suppliers' 'view' as can_vendors %}
+      {% if can_vendors %}<a href="{% url 'vendor_list' %}" class="nav-link {% if '/vendors/' in request.path %}active{% endif %}" title="{% t 'Suppliers' %}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
+        <span>{% t 'Suppliers' %}</span>
       </a>{% endif %}
       {% is_access_admin user as admin_user %}
       {% if admin_user %}
@@ -61,10 +56,6 @@
           <span class="lang-ic">🇪🇬</span><span class="lang-code">ع</span>
         </a>
       </div>
-      <span class="shell-sep"></span>
-      <button type="button" class="icon-btn fs" id="fsToggle" title="{% t 'Fullscreen' %}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-      </button>
       <span class="user-chip">
         <span class="avatar">{{ user.get_username|first|upper }}</span>
         <span class="user-meta">
@@ -92,26 +83,8 @@
     {% block content %}{% endblock %}
   </main>
 
-  <footer class="app-footer">© 2026 {% t 'Petroleum Marine Services' %} · PMS v1.0 · <a href="mailto:ahmed.fathy@pms.eg">Ahmed Fathy</a> {% t 'ext.' %} 1026</footer>
+  <footer class="app-footer">© 2026 {% t 'Procurement Department' %} v1.0 · <a href="mailto:ahmed.fathy@pms.eg">Ahmed Fathy</a> {% t 'ext.' %} 1026</footer>
 
-  <script>
-    (function () {
-      var btn = document.getElementById('fsToggle');
-      if (!btn) return;
-      function sync() {
-        btn.title = document.fullscreenElement ? '{% t "Exit Fullscreen" %}' : '{% t "Fullscreen" %}';
-      }
-      btn.addEventListener('click', function () {
-        if (!document.fullscreenElement) {
-          if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
-        } else if (document.exitFullscreen) {
-          document.exitFullscreen();
-        }
-      });
-      document.addEventListener('fullscreenchange', sync);
-      sync();
-    })();
-  </script>
 {% endblock %}
 </body>
 </html>

@@ -31,21 +31,18 @@ STRINGS = {
     'Procurement Officer': 'مسؤول مشتريات',
 
     # ---- login ----
-    'Sign In · Purchase Management System': 'تسجيل الدخول · نظام إدارة المشتريات',
-    'Procurement for the maritime energy industry': 'المشتريات لقطاع الطاقة البحرية',
-    'Raise purchase requests, manage suppliers, and track purchase orders across your fleet — from one secure workspace.':
-        'إنشاء طلبات الشراء، وإدارة الموردين، ومتابعة أوامر التوريد لأسطولك — من مساحة عمل آمنة واحدة.',
-    'End-to-end purchase request to order workflow': 'دورة عمل متكاملة من طلب الشراء إلى أمر التوريد',
-    'Multi-level approvals & budget control': 'موافقات متعددة المستويات ورقابة على الموازنة',
-    'Supplier management & spend analytics': 'إدارة الموردين وتحليلات الإنفاق',
-    'Role-based access for office & vessel teams': 'صلاحيات حسب الدور لمكاتب الطاقم والوحدات البحرية',
-    'Sign in': 'تسجيل الدخول',
-    'Use your PMS account credentials': 'استخدم بيانات حسابك في النظام',
-    'Username or Email': 'اسم المستخدم أو البريد الإلكتروني',
+    'Sign In · PMS': 'تسجيل الدخول · PMS',
+    'Sign In': 'تسجيل الدخول',
+    'Enter your credentials to continue': 'أدخل بيانات الدخول للمتابعة',
+    'Invalid username or password.': 'اسم المستخدم أو كلمة المرور غير صحيحة.',
+    'Username': 'اسم المستخدم',
     'Password': 'كلمة المرور',
-    'Log On': 'دخول',
-    'Forgot password? Contact your system administrator.': 'نسيت كلمة المرور؟ تواصل مع مسؤول النظام.',
-    '© 2026 Petroleum Marine Services': '© 2026 بتروليوم مارين سيرفيسز',
+    'Contact your administrator for access.' : 'تواصل مع مسؤول النظام للحصول على صلاحية.',
+    'Manage procurement workflows, suppliers, and purchase orders — all in one place.':
+        'إدارة عمليات الشراء والموردين وأوامر التوريد — في مكان واحد.',
+    'Request to order workflow': 'دورة عمل من الطلب إلى أمر التوريد',
+    'Multi-level approvals': 'موافقات متعددة المستويات',
+    'Supplier & spend analytics': 'تحليلات الموردين والإنفاق',
 
     # ---- dashboard ----
     'Welcome back': 'مرحباً بعودتك',

@@ -9,65 +9,92 @@
   <a href="{% if object %}{% url 'vendor_detail' object.pk %}{% else %}{% url 'vendor_list' %}{% endif %}" class="btn">{% t 'Back' %}</a>
 </div>
 
-<form method="post" class="form-card">
+<form method="post" class="form-card compact-form">
   {% csrf_token %}
   {{ form.non_field_errors }}
-  <h2>{% t 'Identity & Registration' %}</h2>
-  {% render_field form.supplier_no %}
-  {% render_field form.name_ar %}
-  {% render_field form.name_en %}
-  {% render_field form.registration_status %}
-  {% render_field form.registered_local %}
-  {% render_field form.registered_foreign %}
-  {% render_field form.certified %}
-  {% render_field form.free_zone %}
-  {% render_field form.suspended %}
-  {% render_field form.struck_off %}
 
-  <h2>{% t 'Dossier / Committee' %}</h2>
-  {% render_field form.dossier_no %}
-  {% render_field form.dossier_type %}
-  {% render_field form.committee_no %}
-  {% render_field form.committee_date %}
+  <fieldset class="form-section">
+    <legend>{% t 'Identity & Registration' %}</legend>
+    <div class="form-grid">
+      {% render_field form.supplier_no %}
+      {% render_field form.registration_status %}
+      {% render_field form.name_ar %}
+      {% render_field form.name_en %}
+      {% render_field form.certified %}
+      {% render_field form.free_zone %}
+    </div>
+  </fieldset>
 
-  <h2>{% t 'Documents' %}</h2>
-  {% render_field form.commercial_registry_no %}
-  {% render_field form.commercial_registry_expiry %}
-  {% render_field form.tax_card_no %}
-  {% render_field form.tax_card_expiry %}
-  {% render_field form.vat_no %}
-  {% render_field form.vat_expiry %}
-  {% render_field form.capital_amount %}
-  {% render_field form.capital_currency %}
+  <fieldset class="form-section">
+    <legend>{% t 'Dossier / Committee' %}</legend>
+    <div class="form-grid">
+      {% render_field form.dossier_no %}
+      {% render_field form.dossier_type %}
+      {% render_field form.committee_no %}
+      {% render_field form.committee_date %}
+    </div>
+  </fieldset>
 
-  <h2>{% t 'Contact' %}</h2>
-  {% render_field form.country %}
-  {% render_field form.address %}
-  {% render_field form.phone1 %}
-  {% render_field form.phone2 %}
-  {% render_field form.mobile1 %}
-  {% render_field form.mobile2 %}
-  {% render_field form.fax %}
-  {% render_field form.email1 %}
-  {% render_field form.email2 %}
-  {% render_field form.website %}
-  {% render_field form.contact_person %}
-  {% render_field form.owner_name %}
-  {% render_field form.category %}
+  <fieldset class="form-section">
+    <legend>{% t 'Documents' %}</legend>
+    <div class="form-grid">
+      {% render_field form.commercial_registry_no %}
+      {% render_field form.commercial_registry_expiry %}
+      {% render_field form.tax_card_no %}
+      {% render_field form.tax_card_expiry %}
+      {% render_field form.vat_no %}
+      {% render_field form.vat_expiry %}
+      {% render_field form.capital_amount %}
+      {% render_field form.capital_currency %}
+    </div>
+  </fieldset>
 
-  <h2>{% t 'Agent' %}</h2>
-  {% render_field form.agent_name %}
-  {% render_field form.agent_phone %}
-  {% render_field form.agent_mobile %}
-  {% render_field form.agent_fax %}
-  {% render_field form.agent_email %}
-  {% render_field form.agent_address %}
-  {% render_field form.agency_documents %}
+  <fieldset class="form-section">
+    <legend>{% t 'Contact' %}</legend>
+    <div class="form-grid">
+      {% render_field form.country %}
+      {% render_field form.category %}
+      {% render_field form.phone1 %}
+      {% render_field form.phone2 %}
+      {% render_field form.mobile1 %}
+      {% render_field form.mobile2 %}
+      {% render_field form.fax %}
+      {% render_field form.email1 %}
+      {% render_field form.email2 %}
+      {% render_field form.website %}
+      {% render_field form.contact_person %}
+      {% render_field form.owner_name %}
+    </div>
+    <div class="form-grid form-grid-wide">
+      {% render_field form.address %}
+    </div>
+  </fieldset>
 
-  <h2>{% t 'Other' %}</h2>
-  {% render_field form.previous_no %}
-  {% render_field form.notes %}
-  {% render_field form.private_notes %}
+  <fieldset class="form-section">
+    <legend>{% t 'Agent' %}</legend>
+    <div class="form-grid">
+      {% render_field form.agent_name %}
+      {% render_field form.agent_phone %}
+      {% render_field form.agent_mobile %}
+      {% render_field form.agent_fax %}
+      {% render_field form.agent_email %}
+    </div>
+    <div class="form-grid form-grid-wide">
+      {% render_field form.agent_address %}
+      {% render_field form.agency_documents %}
+    </div>
+  </fieldset>
+
+  <fieldset class="form-section">
+    <legend>{% t 'Other' %}</legend>
+    <div class="form-grid">
+      {% render_field form.previous_no %}
+    </div>
+    <div class="form-grid form-grid-wide">
+      {% render_field form.notes %}
+      {% render_field form.private_notes %}
+    </div>
+  </fieldset>
 
   <div class="form-actions">
     <button type="submit" class="btn btn-primary">{% t 'Save Supplier' %}</button>
